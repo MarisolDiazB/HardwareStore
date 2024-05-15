@@ -7,7 +7,6 @@ using HardwareStore.Helpers;
 using HardwareStore.Requests;
 using HardwareStore.Core.Pagination;
 using static System.Collections.Specialized.BitVector32;
-using static HardwareStore.Services.IProductServices;
 
 namespace HardwareStore.Services
 {
@@ -72,7 +71,7 @@ namespace HardwareStore.Services
 
                     if (!string.IsNullOrWhiteSpace(request.Filter))
                     {
-                        queryable = queryable.Where(s => s.Name.ToLower().Contains(request.Filter.ToLower()));
+                        queryable = queryable.Where(p => p.Name.ToLower().Contains(request.Filter.ToLower()));
                     }
 
                     PagedList<Products> list = await PagedList<Products>.ToPagedListAsync(queryable, request);

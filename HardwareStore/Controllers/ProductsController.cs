@@ -4,6 +4,9 @@ using HardwareStore.Core.Pagination;
 using HardwareStore.Data.Entities;
 using HardwareStore.Services;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using static System.Collections.Specialized.BitVector32;
 
 
@@ -21,21 +24,14 @@ namespace HardwareStore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
-                                               [FromQuery] int? Page,
-                                               [FromQuery] string? Filter)
+        public async Task<IActionResult> Index()
         {
-            PaginationRequest paginationRequest = new PaginationRequest
-            {
-                RecordsPerPage = RecordsPerPage ?? 15,
-                Page = Page ?? 1,
-                Filter = Filter,
-            };
-
-            Response<PaginationResponse<Products>> response = await _services.GetListAsync(paginationRequest);
-
-            return View(response.Result);
+            var paginationRequest = new PaginationRequest();
+            var response = await _services.GetListAsync(paginationRequest);
+            var product = response.Result.List; // Extraer la lista de empleados del objeto PaginationResponse
+            return View(product);
         }
+
 
         [HttpGet]
         public IActionResult Create()
@@ -71,8 +67,8 @@ namespace HardwareStore.Controllers
             }
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Edit([FromRoute] int id)
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
         {
             Response<Products> response = await _services.GetOneAsync(id);
 
@@ -86,7 +82,7 @@ namespace HardwareStore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Update(Products model)
+        public async Task<IActionResult> Edit(Products model)
         {
             try
             {
@@ -114,8 +110,8 @@ namespace HardwareStore.Controllers
             }
         }
 
-        [HttpPost("{id}")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
         {
             Response<Products> response = await _services.DeleteAsync(id);
 
@@ -131,3 +127,6 @@ namespace HardwareStore.Controllers
     }
 
 }
+
+
+

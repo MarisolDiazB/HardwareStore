@@ -20,7 +20,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
 
 
-builder.Services.AddScoped<IProductServices, ProductService>();
+builder.Services.AddScoped<IProductServices, IProductServices.ProductService>();
 builder.Services.AddScoped<IEmployeeServices, EmployeeService>();
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<INotyfService, NotyfService>();
@@ -56,7 +56,7 @@ SeedData(app);
 
 app.Run();
 
-void SeedData(WebApplication app)
+static void SeedData(WebApplication app)
 {
     using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;

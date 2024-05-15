@@ -10,7 +10,7 @@ namespace HardwareStore.Data.Entities
             [MaxLength(32, ErrorMessage = "El campo {0} debe tener máximo {1} carácteres")]
             [Required(ErrorMessage = "El campo {0} es requerido")]
             [Display(Name = "Nombre")]
-            public string Name { get; set; }
+            public required string Name { get; set; }
 
             [Required(ErrorMessage = "El campo {0} es requerido")]
             [Display(Name = "Precio")]

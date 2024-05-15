@@ -1,7 +1,37 @@
-﻿
+﻿@model HardwareStore.Data.Entities.Clients
+
 @{
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h2>Editar Cliente</h2>
 
+<form asp-action="Edit" asp-route-id="@Model.Id" method="post">
+    <div class="form-group">
+        <label>Nombres:</label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Apellidos:</label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Dirección:</label>
+        <input asp-for="Customeraddress" class="form-control" />
+        <span asp-validation-for="Customeraddress" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label>Teléfono:</label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a asp-controller="Client" asp-action="Index" class="btn btn-secondary">Cancelar</a>
+
+</form>

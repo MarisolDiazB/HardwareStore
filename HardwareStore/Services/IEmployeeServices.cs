@@ -7,17 +7,19 @@ using HardwareStore.Requests;
 using System.Collections.Generic;
 using static HardwareStore.Services.IEmployeeServices;
 using static System.Collections.Specialized.BitVector32;
+using HardwareStore.Core.Pagination;
 
 namespace HardwareStore.Services
 {
     public interface IEmployeeServices
     {
         public Task<Response<Employee>> CreateEmployeeAsync(Employee model);//Crear un Empleado
-        public Task<Response<List<Employee>>> GetListEmployeeAsync();//Trae una lista de los empleados
+        public Task<Response<PaginationResponse<Employee>>> GetListEmployeeAsync(PaginationRequest request);//Trae una lista de los empleados
         public Task<Response<Employee>> GetOneEmployeeAsync(int id);//Trae un empleado segun su id
         public Task<Response<Employee>> EditEmployeeAsync(Employee model);//Edita a un empleado
         public Task<Response<Employee>> DeleteEmployeeAsync(int id);//Elimina el empleado        
         public Task<Response<Employee>> ToggleEmployeeAsync(ToggleEmployeeRequest request);//Si el empleado esta activo o no
+
 
         public class EmployeeService : IEmployeeServices
         {
@@ -69,17 +71,35 @@ namespace HardwareStore.Services
                     return ResponseHelper<Employee>.MakeResponseFail(ex);
                 }
             }
-            public async Task<Response<List<Employee>>> GetListEmployeeAsync()
+            public async Task<Response<PaginationResponse<Employee>>> GetListEmployeeAsync(PaginationRequest request)
             {
                 try
                 {
-                    List<Employee> list = await _context.Employees.ToListAsync();
+                    IQueryable<Employee> queryable = _context.Employees.AsQueryable();
 
-                    return ResponseHelper<List<Employee>>.MakeResponseSuccess(list, "Empleados obtenidos con éxito");
+                    if (!string.IsNullOrWhiteSpace(request.Filter))
+                    {
+                        queryable = queryable.Where(e => e.FirstName.ToLower().Contains(request.Filter.ToLower()));
+                    }
+
+                    PagedList<Employee> list = await PagedList<Employee>.ToPagedListAsync(queryable, request);
+
+
+                    PaginationResponse<Employee> result = new PaginationResponse<Employee>
+                    {
+                        List = list,
+                        TotalCount = list.TotalCount,
+                        RecordsPerPage = list.RecordsPerPage,
+                        CurrentPage = list.CurrentPage,
+                        TotalPages = list.TotalPages,
+                        Filter = request.Filter,
+                    };
+
+                    return ResponseHelper<PaginationResponse<Employee>>.MakeResponseSuccess(result, "Secciones obtenidas con éxito");
                 }
                 catch (Exception ex)
                 {
-                    return ResponseHelper<List<Employee>>.MakeResponseFail(ex);
+                    return ResponseHelper<PaginationResponse<Employee>>.MakeResponseFail(ex);
                 }
             }
             public async Task<Response<Employee>> EditEmployeeAsync(Employee model)

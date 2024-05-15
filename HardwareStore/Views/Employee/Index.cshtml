@@ -27,7 +27,7 @@
                     <a asp-action="Edit" asp-route-id="@employee.Id">Editar</a> |
                     <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este empleado?');">
                         <input type="hidden" name="id" value="@employee.Id" />
-                        <button type="submit">Eliminar</button>
+                        <button type="submit" onclick="window.location.href='/Employee/Index'">Eliminar</button>
                     </form>
                 </td>
             </tr>

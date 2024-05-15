@@ -5,8 +5,8 @@
 
 <h2>Editar Producto</h2>
 
-<form asp-action="Edit">
-    <input type="hidden" asp-for="Id" />
+<form asp-action="Edit" method="post">
+   
     <div class="form-group">
         <label asp-for="Name">Nombre:</label>
         <input asp-for="Name" class="form-control" />
@@ -22,6 +22,7 @@
         <input asp-for="Stock" class="form-control" />
         <span asp-validation-for="Stock" class="text-danger"></span>
     </div>
+    <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-primary">Guardar</button>
 </form>
 

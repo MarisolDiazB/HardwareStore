@@ -1,9 +1,10 @@
-﻿/*using AspNetCoreHero.ToastNotification.Abstractions;
-using HardwareStore.Core;
-using HardwareStore.Data;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
+using HardwareStore.Core.Pagination;
 using HardwareStore.Data.Entities;
 using HardwareStore.Services;
 using Microsoft.AspNetCore.Mvc;
+
+
 
 namespace HardwareStore.Controllers
 {
@@ -21,74 +22,12 @@ namespace HardwareStore.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            Response<List<Employee>> response = await _services.GetListEmployeeAsync();
-            return View(response.Result);
+            var paginationRequest = new PaginationRequest();
+            var response = await _services.GetListEmployeeAsync(paginationRequest);
+            var employees = response.Result.List; // Extraer la lista de empleados del objeto PaginationResponse
+            return View(employees);
         }
 
-        [HttpGet]
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Create(Employee model)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    _notify.Error("Debe ajustar los errores de validación.");
-                    return View(model);
-                }
-                Response<Employee> response = await _services.CreateEmployeeAsync(model);
-
-                if (response.IsSuccess)
-                {
-                    _notify.Success(response.Message);
-                    return RedirectToAction(nameof(Index));
-                }
-
-                _notify.Error(response.Message);
-                return View(model);
-            }
-            catch (Exception ex)
-            {
-                _notify.Error(ex.Message);
-                return View(model);
-            }
-        }
-        
-    }
-}
-*/
-using AspNetCoreHero.ToastNotification.Abstractions;
-using HardwareStore.Core;
-using HardwareStore.Data.Entities;
-using HardwareStore.Services;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
-
-namespace HardwareStore.Controllers
-{
-    public class EmployeeController : Controller
-    {
-        private readonly IEmployeeServices _services;
-        private readonly INotyfService _notify;
-
-        public EmployeeController(IEmployeeServices employeeServices, INotyfService notify)
-        {
-            _services = employeeServices;
-            _notify = notify;
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> Index()
-        {
-            var response = await _services.GetListEmployeeAsync();
-            return View(response.Result);
-        }
 
         [HttpGet]
         public IActionResult Create()
