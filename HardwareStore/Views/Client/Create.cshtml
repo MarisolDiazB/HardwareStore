@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Nuevo Cliente</h1>
+
+<form asp-action="Create" method="POST">
+
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="FirstName" name="FirstName" placeholder="Nombre..">
+        <span class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Apellido</label>
+        <input type="text" class="form-control" id="LastName" name="LastName" placeholder="Apellido..">
+        <span class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Direccion</label>
+        <input type="text" class="form-control" id="Customeraddress" name="Customeraddress" placeholder="Direccion..">
+        <span class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Telefono</label>
+        <input type="text" class="form-control" id="Phone" name="Phone" placeholder="Telefono..">
+        <span class="text-danger"></span>
+    </div>
+
+    <button class="btn btn-primary" onclick=" window.location.href='/Product/Index' ">Guardar</button>
+
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

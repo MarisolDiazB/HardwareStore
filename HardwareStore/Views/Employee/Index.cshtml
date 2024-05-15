@@ -1,0 +1,42 @@
+﻿@model List<HardwareStore.Data.Entities.Employee>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Lista de Empleados</h2>
+<button class="btn btn-primary" onclick="window.location.href='/Employee/Create'">Nuevo Empleado</button>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Edad</th>
+            <th>Activo</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model)
+        {
+            <tr>
+                <td>@employee.FirstName</td>
+                <td>@employee.LastName</td>
+                <td>@employee.Age</td>
+                <td>@employee.IsActive</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@employee.Id">Editar</a> |
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este empleado?');">
+                        <input type="hidden" name="id" value="@employee.Id" />
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

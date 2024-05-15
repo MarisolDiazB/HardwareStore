@@ -1,0 +1,17 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Programacion de software</p>
+    <button onclick="window.location.href='/Employee/Index'">Empleados</button>
+    <button onclick="window.location.href='/Products/Index'">Productos</button>
+    <button onclick="window.location.href='/Client/Index'">Clientes</button>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

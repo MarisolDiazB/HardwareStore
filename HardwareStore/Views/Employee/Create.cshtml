@@ -1,0 +1,30 @@
+﻿@model HardwareStore.Data.Entities.Employee
+@{
+    ViewData["Title"] = "Crear Empleado";
+}
+
+<h2>Crear Empleado</h2>
+
+<form asp-action="Create" method="post">
+    <div class="form-group">
+        <label asp-for="FirstName">Nombre</label>
+        <input asp-for="FirstName" class="form-control" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="LastName">Apellido</label>
+        <input asp-for="LastName" class="form-control" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Age">Edad</label>
+        <input asp-for="Age" class="form-control" />
+        <span asp-validation-for="Age" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IsActive">Activo</label>
+        <input asp-for="IsActive" class="form-control" />
+        <span asp-validation-for="IsActive" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Crear</button>
+</form>
