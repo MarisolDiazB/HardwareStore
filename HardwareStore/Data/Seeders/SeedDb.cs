@@ -20,7 +20,7 @@ namespace HardwareStore.Data.Seeders
 
             await new ClientSeeder(_context).SeedAsync();
             
-            await new RoleSeeder (_context).SeedAsync();
+            await new PermissionSeeder (_context).SeedAsync();
         }
     }
 }

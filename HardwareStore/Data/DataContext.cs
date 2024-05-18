@@ -1,6 +1,5 @@
 ﻿using HardwareStore.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using static System.Collections.Specialized.BitVector32;
 
 namespace HardwareStore.Data
 {
@@ -16,7 +15,9 @@ namespace HardwareStore.Data
 
         public DbSet<Clients> Clients { get; set; }
 
+        public DbSet<Permission> Permissions { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<RolePermission> RolePermissions { get; set; }
 
     }
 
