@@ -6,7 +6,7 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using AspNetCoreHero.ToastNotification.Notyf;
 using AspNetCoreHero.ToastNotification;
 using HardwareStore.Data.Seeders;
-using static HardwareStore.Services.IClientService;
+using static HardwareStore.Services.ICustomerService;
 using static HardwareStore.Services.IEmployeeServices;
 using static HardwareStore.Services.IProductServices;
 
@@ -22,7 +22,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 
 builder.Services.AddScoped<IProductServices, ProductService>();
 builder.Services.AddScoped<IEmployeeServices, EmployeeService>();
-builder.Services.AddScoped<IClientService, ClientService>();
+builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<INotyfService, NotyfService>();
 
 builder.Services.AddNotyf(config =>

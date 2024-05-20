@@ -13,7 +13,7 @@ namespace HardwareStore.Data
 
         public DbSet<Employee> Employees { get; set; }
 
-        public DbSet<Clients> Clients { get; set; }
+        public DbSet<Customer> Customer { get; set; }
 
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<Role> Roles { get; set; }

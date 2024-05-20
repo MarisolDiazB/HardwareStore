@@ -7,12 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HardwareStore.Controllers
 {
-    public class ClientController : Controller
+    public class CustomerController : Controller
     {
-        private readonly IClientService _services;
+        private readonly ICustomerService _services;
         private readonly INotyfService _notify;
 
-        public ClientController(IClientService productServices, INotyfService notify)
+        public CustomerController(ICustomerService productServices, INotyfService notify)
         {
             _services = productServices;
             _notify = notify;
@@ -20,7 +20,7 @@ namespace HardwareStore.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            Response<List<Clients>> list = await _services.GetListAsync();
+            Response<List<Customer>> list = await _services.GetListAsync();
 
             if (!list.IsSuccess)
             {
@@ -36,7 +36,7 @@ namespace HardwareStore.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(Clients model)
+        public async Task<IActionResult> Create(Customer model)
         {
             try
             {
@@ -45,7 +45,7 @@ namespace HardwareStore.Controllers
                     _notify.Error("Debe ajustar los errores de validación.");
                     return View(model);
                 }
-                Response<Clients> response = await _services.CreateAsync(model);
+                Response<Customer> response = await _services.CreateAsync(model);
 
                 if (response.IsSuccess)
                 {
