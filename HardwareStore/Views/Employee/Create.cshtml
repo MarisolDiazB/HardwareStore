@@ -1,35 +1,37 @@
-﻿@{
+﻿@model HardwareStore.Data.Entities.Employee
+
+@{
     ViewData["Title"] = "Create";
 }
 
 <h1>Nuevo Empleado</h1>
 
-<form asp-action="Create" method="POST">
+<form asp-action="Create" method="post">
     <div class="mb-3">
-        <label class="form-label">Nombre</label>
-        <input type="text" class="form-control" id="FirstName" name="FirstName" placeholder="Nombre..">
-        <span class="text-danger"></span>
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" placeholder="Nombre.." />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Apellido</label>
-        <input type="text" class="form-control" id="LastName" name="LastName" placeholder="Apellido..">
-        <span class="text-danger"></span>
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" placeholder="Apellido.." />
+        <span asp-validation-for="LastName" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Edad</label>
-        <input type="number" class="form-control" id="Age" name="Age" placeholder="Edad..">
-        <span class="text-danger"></span>
+        <label asp-for="Age" class="form-label"></label>
+        <input asp-for="Age" class="form-control" placeholder="Edad.." />
+        <span asp-validation-for="Age" class="text-danger"></span>
     </div>
 
     <div class="mb-3 form-check">
-        <input type="checkbox" class="form-check-input" id="IsActive" name="IsActive">
-        <label class="form-check-label" for="IsActive">Activo</label>
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label"></label>
     </div>
 
-    <button class="btn btn-primary" type="submit">Guardar</button>
-    <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='/Products/Index'">Volver </button>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/Employee/Index'">Volver</button>
 </form>
 
 @section Scripts {

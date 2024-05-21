@@ -1,38 +1,38 @@
-﻿@{
+﻿@model HardwareStore.Data.Entities.Customer
+
+@{
     ViewData["Title"] = "Create";
 }
 
-<h1>Nuevo Cliente</h1>
+<h1>Crear Cliente</h1>
 
-<form asp-action="Create" method="POST">
-
+<form asp-action="Create" method="post">
     <div class="mb-3">
-        <label class="form-label">Nombre</label>
-        <input type="text" class="form-control" id="FirstName" name="FirstName" placeholder="Nombre..">
-        <span class="text-danger"></span>
+        <label asp-for="FirstName" class="form-label"></label>
+        <input asp-for="FirstName" class="form-control" placeholder="Nombre.." />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Apellido</label>
-        <input type="text" class="form-control" id="LastName" name="LastName" placeholder="Apellido..">
-        <span class="text-danger"></span>
+        <label asp-for="LastName" class="form-label"></label>
+        <input asp-for="LastName" class="form-control" placeholder="Apellido.." />
+        <span asp-validation-for="LastName" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Direccion</label>
-        <input type="text" class="form-control" id="Customeraddress" name="Customeraddress" placeholder="Direccion..">
-        <span class="text-danger"></span>
+        <label asp-for="Customeraddress" class="form-label"></label>
+        <input asp-for="Customeraddress" class="form-control" placeholder="Direccion.." />
+        <span asp-validation-for="Customeraddress" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Telefono</label>
-        <input type="text" class="form-control" id="Phone" name="Phone" placeholder="Telefono..">
-        <span class="text-danger"></span>
+        <label asp-for="Phone" class="form-label"></label>
+        <input asp-for="Phone" class="form-control" placeholder="Telefono.." />
+        <span asp-validation-for="Phone" class="text-danger"></span>
     </div>
 
-    <button class="btn btn-primary" type="submit">Guardar</button>
-    <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='/Customer/Index'">Volver </button>
-
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/Customer/Index'">Volver</button>
 </form>
 
 @section Scripts {
@@ -40,4 +40,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-

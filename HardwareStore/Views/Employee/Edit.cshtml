@@ -27,4 +27,14 @@
     </div>
     <input type="hidden" asp-for="Id" />
     <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/Employee/Index'">Volver</button>
+
 </form>
+
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -2,29 +2,15 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="row">
-    <div class="col-md-2">
-        <div class="button-group">
-            <button class="btn btn-primary mb-2 w-100" onclick="window.location.href='/Employee/Index'">Empleados</button>
-            <button class="btn btn-primary mb-2 w-100" onclick="window.location.href='/Products/Index'">Productos</button>
-            <button class="btn btn-primary mb-2 w-100" onclick="window.location.href='/Customer/Index'">Clientes</button>
-        </div>
-    </div>
-    <div class="col-md-10">
-        <div class="text-center">
-            <h1 class="display-4">Welcome</h1>
-            <p>Programacion de software</p>
-        </div>
-    </div>
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Programacion de software</p>
+    <button onclick="window.location.href='/Employee/Index'">Empleados</button>
+    <button onclick="window.location.href='/Products/Index'">Productos</button>
+    <button onclick="window.location.href='/Client/Index'">Clientes</button>
 </div>
 
 @section Scripts {
-    <script>
-        $(document).ready(function () {
-            // Inicializar filtros aquí si es necesario
-            console.log("Scripts cargados correctamente.");
-        });
-    </script>
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }

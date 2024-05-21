@@ -1,31 +1,32 @@
-﻿@{
+﻿@model HardwareStore.Data.Entities.Products
+
+@{
     ViewData["Title"] = "Create";
 }
 
-<h1>Nuevo Producto</h1>
+<h1>Nuevo Empleado</h1>
 
-<form asp-action="Create" method="POST">
-
+<form asp-action="Create" method="post">
     <div class="mb-3">
-        <label class="form-label">Nombre</label>
-        <input type="text" class="form-control" id="Name" name="Name" placeholder="Nombre..">
-        <span class="text-danger"></span>
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" placeholder="Nombre.." />
+        <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Precio</label>
-        <input type="number" class="form-control" id="Price" name="Price" placeholder="Precio..">
-        <span class="text-danger"></span>
+        <label asp-for="Price" class="form-label"></label>
+        <input asp-for="Price" class="form-control" placeholder="Precio.." />
+        <span asp-validation-for="Price" class="text-danger"></span>
     </div>
 
     <div class="mb-3">
-        <label class="form-label">Disponible</label>
-        <input type="number" class="form-control" id="Stock" name="Stock" placeholder="Disponible..">
-        <span class="text-danger"></span>
+        <label asp-for="Stock" class="form-label"></label>
+        <input asp-for="Stock" class="form-control" placeholder="Cantidad.." />
+        <span asp-validation-for="Stock" class="text-danger"></span>
     </div>
 
-    <button class="btn btn-primary" type="submit">Guardar</button>
-    <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='/Products/Index'">Volver </button>
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/Customer/Index'">Volver</button>
 </form>
 
 @section Scripts {
@@ -33,4 +34,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-

@@ -23,8 +23,12 @@
         <span asp-validation-for="Stock" class="text-danger"></span>
     </div>
     <button type="submit" class="btn btn-primary">Guardar</button>
+    <button onclick="window.location.href='/Products/Index'" class="btn btn-secondary">Cancelar</button>
+
 </form>
 
-<button onclick="window.location.href='/Products/Index'" class="btn btn-secondary">Cancelar</button>
-
-
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
