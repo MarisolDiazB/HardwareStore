@@ -18,7 +18,7 @@ namespace HardwareStore.Data.Seeders
 
             await new EmployeeSeeder(_context).SeedAsync();
 
-            await new ClientSeeder(_context).SeedAsync();
+            await new CustomerSeeder(_context).SeedAsync();
             
             await new PermissionSeeder (_context).SeedAsync();
         }

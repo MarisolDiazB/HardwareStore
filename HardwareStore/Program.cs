@@ -9,6 +9,8 @@ using HardwareStore.Data.Seeders;
 using static HardwareStore.Services.ICustomerService;
 using static HardwareStore.Services.IEmployeeServices;
 using static HardwareStore.Services.IProductServices;
+using HardwareStore.Helpers;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,7 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<IProductServices, ProductService>();
 builder.Services.AddScoped<IEmployeeServices, EmployeeService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IConverterHelper, ConverterHelper>();
 builder.Services.AddScoped<INotyfService, NotyfService>();
 
 builder.Services.AddNotyf(config =>

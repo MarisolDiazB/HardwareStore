@@ -1,9 +1,11 @@
 ﻿using HardwareStore.Data.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace HardwareStore.Data.Entities
 {
     public class RolePermission
     {
+      
         public int RoleId { get; set; }
         public Role Role { get; set; }
 

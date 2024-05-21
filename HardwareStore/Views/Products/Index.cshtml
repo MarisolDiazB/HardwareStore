@@ -4,29 +4,34 @@
 }
 <h2>Lista de Productos</h2>
 <button class="btn btn-primary" onclick="window.location.href='/Products/Create'">Nuevo Producto</button>
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Precio</th>
+            <th>Stock</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
             <tr>
-                <th>Nombre</th>
-                <th>Precio</th>
-                <th>Stock</th>
+                <td>@product.Name</td>
+                <td>@product.Price</td>
+                <td>@product.Stock</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@product.Id">Editar</a> |
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este empleado?');">
+                        <input type="hidden" name="id" value="@product.Id" />
+                        <button type="submit">Eliminar</button>
+                    </form>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var product in Model)
-            {
-                <tr>
-                    <td>@product.Name</td>
-                    <td>@product.Price</td>
-                    <td>@product.Stock</td>
-                    <td>
-                        <a asp-action="Edit" asp-route-id="@product.Id">Editar</a> |
-                        <a asp-action="Delete" asp-route-id="@product.Id">Eliminar</a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+        }
+    </tbody>
+</table>
+
+<button class="btn btn-outline-secondary" type="button" onclick="window.location.href='/Home/Index'">Volver </button>
 
 
 @section Scripts {

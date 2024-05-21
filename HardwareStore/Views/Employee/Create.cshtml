@@ -1,30 +1,39 @@
-﻿@model HardwareStore.Data.Entities.Employee
-@{
-    ViewData["Title"] = "Crear Empleado";
+﻿@{
+    ViewData["Title"] = "Create";
 }
 
-<h2>Crear Empleado</h2>
+<h1>Nuevo Empleado</h1>
 
-<form asp-action="Create" method="post">
-    <div class="form-group">
-        <label asp-for="FirstName">Nombre</label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+<form asp-action="Create" method="POST">
+    <div class="mb-3">
+        <label class="form-label">Nombre</label>
+        <input type="text" class="form-control" id="FirstName" name="FirstName" placeholder="Nombre..">
+        <span class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="LastName">Apellido</label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
+
+    <div class="mb-3">
+        <label class="form-label">Apellido</label>
+        <input type="text" class="form-control" id="LastName" name="LastName" placeholder="Apellido..">
+        <span class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="Age">Edad</label>
-        <input asp-for="Age" class="form-control" />
-        <span asp-validation-for="Age" class="text-danger"></span>
+
+    <div class="mb-3">
+        <label class="form-label">Edad</label>
+        <input type="number" class="form-control" id="Age" name="Age" placeholder="Edad..">
+        <span class="text-danger"></span>
     </div>
-    <div class="form-group">
-        <label asp-for="IsActive">Activo</label>
-        <input asp-for="IsActive" class="form-control" />
-        <span asp-validation-for="IsActive" class="text-danger"></span>
+
+    <div class="mb-3 form-check">
+        <input type="checkbox" class="form-check-input" id="IsActive" name="IsActive">
+        <label class="form-check-label" for="IsActive">Activo</label>
     </div>
-    <button type="submit" class="btn btn-primary">Crear</button>
+
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='/Products/Index'">Volver </button>
 </form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

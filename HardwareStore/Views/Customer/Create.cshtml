@@ -1,5 +1,4 @@
-﻿
-@{
+﻿@{
     ViewData["Title"] = "Create";
 }
 
@@ -31,7 +30,8 @@
         <span class="text-danger"></span>
     </div>
 
-    <button class="btn btn-primary" onclick=" window.location.href='/Product/Index' ">Guardar</button>
+    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='/Customer/Index'">Volver </button>
 
 </form>
 
@@ -40,3 +40,4 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+

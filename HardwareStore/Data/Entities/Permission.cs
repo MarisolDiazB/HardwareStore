@@ -4,6 +4,7 @@ namespace HardwareStore.Data.Entities
 {
     public class Permission
     {
+        [Key]
         public int Id { get; set; }
 
         [Display(Name = "Permiso")]

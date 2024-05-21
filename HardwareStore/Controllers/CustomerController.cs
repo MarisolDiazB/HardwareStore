@@ -1,6 +1,5 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using HardwareStore.Core;
-using HardwareStore.Data;
 using HardwareStore.Data.Entities;
 using HardwareStore.Services;
 using Microsoft.AspNetCore.Mvc;

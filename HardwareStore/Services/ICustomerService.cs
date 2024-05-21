@@ -2,7 +2,6 @@
 using HardwareStore.Data;
 using HardwareStore.Data.Entities;
 using HardwareStore.Helpers;
-using HardwareStore.Requests;
 using Microsoft.EntityFrameworkCore;
 
 namespace HardwareStore.Services

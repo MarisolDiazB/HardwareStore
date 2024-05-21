@@ -19,3 +19,5 @@ namespace HardwareStore.Data.Entities
         public bool IsActive { get; set; } = true;
     }
 }
+
+

@@ -21,20 +21,12 @@ namespace HardwareStore.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
-                                               [FromQuery] int? Page,
-                                               [FromQuery] string? Filter)
+        public async Task<IActionResult> Index()
         {
-            PaginationRequest paginationRequest = new PaginationRequest
-            {
-                RecordsPerPage = RecordsPerPage ?? 15,
-                Page = Page ?? 1,
-                Filter = Filter,
-            };
-
-            Response<PaginationResponse<Products>> response = await _services.GetListAsync(paginationRequest);
-
-            return View(response.Result);
+            var paginationRequest = new PaginationRequest();
+            var response = await _services.GetListAsync(paginationRequest);
+            var product = response.Result.List; // Extraer la lista de empleados del objeto PaginationResponse
+            return View(product);
         }
 
         [HttpGet]
