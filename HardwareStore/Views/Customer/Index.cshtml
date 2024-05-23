@@ -1,21 +1,23 @@
-﻿@model List<HardwareStore.Data.Entities.Customer>
+﻿@model PaginacionViewModel//PONER EN INGLES
+
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lista de Clientes";
 }
 
-<h2>Lista de Cliente</h2>
+<h2>Lista de Clientes</h2>
 <button class="btn btn-primary" onclick="window.location.href='/Customer/Create'">Nuevo Cliente</button>
 <table class="table">
     <thead>
         <tr>
             <th>Nombre</th>
             <th>Apellido</th>
-            <th>Direccion</th>
-            <th>Telefono</th>
+            <th>Dirección</th>
+            <th>Teléfono</th>
+            
         </tr>
     </thead>
     <tbody>
-        @foreach (var customer in Model)
+        @foreach (var customer in Model.Customers)
         {
             <tr>
                 <td>@customer.FirstName</td>
@@ -24,7 +26,7 @@
                 <td>@customer.Phone</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@customer.Id">Editar</a> |
-                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este empleado?');">
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este Cliente?');">
                         <input type="hidden" name="id" value="@customer.Id" />
                         <button type="submit">Eliminar</button>
                     </form>
@@ -33,6 +35,20 @@
         }
     </tbody>
 </table>
+
+<div>
+    @if (Model.PaginaActual > 1)
+    {
+        <a href="@Url.Action("Index", new { pageNumber = Model.PaginaActual - 1 })">Anterior</a>
+    }
+
+    Página @Model.PaginaActual de @Model.TotalPaginas
+
+    @if (Model.PaginaActual < Model.TotalPaginas)
+    {
+        <a href="@Url.Action("Index", new { pageNumber = Model.PaginaActual + 1 })">Siguiente</a>
+    }
+</div>
 
 <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='/Home/Index'">Volver </button>
 

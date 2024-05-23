@@ -1,40 +1,45 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using HardwareStore.Core;
-using HardwareStore.Core.Pagination;
-using HardwareStore.Data.Entities;
-using HardwareStore.Services;
-using Microsoft.AspNetCore.Mvc;
-using static System.Collections.Specialized.BitVector32;
+﻿using AspNetCoreHero.ToastNotification.Abstractions; 
+using HardwareStore.Core; 
+using HardwareStore.Core.Pagination; 
+using HardwareStore.Data.Entities; 
+using HardwareStore.Services; 
+using Microsoft.AspNetCore.Mvc; 
+using System; 
+using System.Linq;
+using System.Threading.Tasks; 
 
-
-namespace HardwareStore.Controllers
+namespace HardwareStore.Controllers 
 {
-    public class ProductsController : Controller
+    public class ProductsController : Controller 
     {
-        private readonly IProductServices _services;
-        private readonly INotyfService _notify;
-        
+        private readonly IProductServices _services; 
+        private readonly INotyfService _notify; 
+
+        // Constructor de la clase ProductsController.
         public ProductsController(IProductServices productServices, INotyfService notify)
         {
-            _services = productServices;
-            _notify = notify;
+            _services = productServices; 
+            _notify = notify; 
         }
 
+        // para mostrar la lista de productos.
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var paginationRequest = new PaginationRequest();
-            var response = await _services.GetListAsync(paginationRequest);
-            var product = response.Result.List; // Extraer la lista de empleados del objeto PaginationResponse
-            return View(product);
+            var paginationRequest = new PaginationRequest(); // una solicitud de paginación vacía.
+            var response = await _services.GetListAsync(paginationRequest); // la lista de productos de forma asincrónica.
+            var product = response.Result.List; 
+            return View(product); 
         }
 
+        //  para mostrar el formulario de creación de producto.
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(); 
         }
 
+        //  para procesar el formulario de creación de producto.
         [HttpPost]
         public async Task<IActionResult> Create(Products model)
         {
@@ -45,6 +50,7 @@ namespace HardwareStore.Controllers
                     _notify.Error("Debe ajustar los errores de validación.");
                     return View(model);
                 }
+
                 Response<Products> response = await _services.CreateAsync(model);
 
                 if (response.IsSuccess)
@@ -63,6 +69,7 @@ namespace HardwareStore.Controllers
             }
         }
 
+        // para mostrar el formulario de edición de producto.
         [HttpGet("{id}")]
         public async Task<IActionResult> Edit([FromRoute] int id)
         {
@@ -77,6 +84,7 @@ namespace HardwareStore.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        //  para procesar el formulario de edición de producto.
         [HttpPost]
         public async Task<IActionResult> Update(Products model)
         {
@@ -106,6 +114,7 @@ namespace HardwareStore.Controllers
             }
         }
 
+        //  para eliminar un producto.
         [HttpPost("{id}")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
@@ -121,5 +130,4 @@ namespace HardwareStore.Controllers
             return RedirectToAction(nameof(Index));
         }
     }
-
 }

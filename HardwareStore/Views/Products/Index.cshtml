@@ -21,7 +21,7 @@
                 <td>@product.Stock</td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@product.Id">Editar</a> |
-                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este empleado?');">
+                    <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este Producto?');">
                         <input type="hidden" name="id" value="@product.Id" />
                         <button type="submit">Eliminar</button>
                     </form>
