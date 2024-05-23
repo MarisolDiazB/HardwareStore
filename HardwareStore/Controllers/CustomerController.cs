@@ -1,22 +1,38 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions; // importa la interfaz para el servicio de notificaciones.
+<<<<<<< HEAD
 using HardwareStore.Core.Pagination;
 using HardwareStore.Data.Entities;
 using HardwareStore.Services;
+=======
+using HardwareStore.Core.Pagination; 
+using HardwareStore.Data.Entities; 
+using HardwareStore.Services; 
+>>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
 using Microsoft.AspNetCore.Mvc; // importa el espacio de nombres de ASP.NET Core para MVC.
 
-namespace HardwareStore.Controllers
+namespace HardwareStore.Controllers 
 {
-    public class CustomerController : Controller
+    public class CustomerController : Controller 
     {
+<<<<<<< HEAD
         private readonly ICustomerService _services;
         private readonly INotyfService _notify;
         private const int PageSize = 10;
+=======
+        private readonly ICustomerService _services; 
+        private readonly INotyfService _notify; 
+        private const int PageSize = 10; 
+>>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
 
         // constructor de la clase CustomerController.
         public CustomerController(ICustomerService customerService, INotyfService notify)
         {
             _services = customerService; // Inicializa
+<<<<<<< HEAD
             _notify = notify;
+=======
+            _notify = notify; 
+>>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
         }
 
         // mostrar la lista de clientes.
@@ -43,7 +59,11 @@ namespace HardwareStore.Controllers
                 TotalPaginas = (int)Math.Ceiling(totalItems / (double)PageSize)
             };
 
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
             return View(viewModel);
         }
 
@@ -148,7 +168,11 @@ namespace HardwareStore.Controllers
                 // elimina el cliente de forma asincrónica.
                 var response = await _services.DeleteAsync(id);
 
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
                 if (response.IsSuccess)
                 {
                     _notify.Success(response.Message);
@@ -166,4 +190,8 @@ namespace HardwareStore.Controllers
             return RedirectToAction(nameof(Index));
         }
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f

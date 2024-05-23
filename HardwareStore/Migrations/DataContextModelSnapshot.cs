@@ -154,22 +154,14 @@ namespace HardwareStore.Migrations
             modelBuilder.Entity("HardwareStore.Data.Entities.RolePermission", b =>
                 {
                     b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
 
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoleId1")
-                        .HasColumnType("int");
-
-                    b.HasKey("RoleId");
+                    b.HasKey("RoleId", "PermissionId");
 
                     b.HasIndex("PermissionId");
-
-                    b.HasIndex("RoleId1");
 
                     b.ToTable("RolePermissions");
                 });
@@ -256,7 +248,7 @@ namespace HardwareStore.Migrations
 
                     b.HasOne("HardwareStore.Data.Entities.Role", "Role")
                         .WithMany("RolePermissions")
-                        .HasForeignKey("RoleId1")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

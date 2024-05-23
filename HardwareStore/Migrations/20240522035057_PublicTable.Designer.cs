@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HardwareStore.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240520223326_CreationProductTable")]
-    partial class CreationProductTable
+    [Migration("20240522035057_PublicTable")]
+    partial class PublicTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -157,22 +157,14 @@ namespace HardwareStore.Migrations
             modelBuilder.Entity("HardwareStore.Data.Entities.RolePermission", b =>
                 {
                     b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleId"));
 
                     b.Property<int>("PermissionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RoleId1")
-                        .HasColumnType("int");
-
-                    b.HasKey("RoleId");
+                    b.HasKey("RoleId", "PermissionId");
 
                     b.HasIndex("PermissionId");
-
-                    b.HasIndex("RoleId1");
 
                     b.ToTable("RolePermissions");
                 });
@@ -259,7 +251,7 @@ namespace HardwareStore.Migrations
 
                     b.HasOne("HardwareStore.Data.Entities.Role", "Role")
                         .WithMany("RolePermissions")
-                        .HasForeignKey("RoleId1")
+                        .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

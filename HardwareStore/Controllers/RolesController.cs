@@ -1,31 +1,33 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using HardwareStore.Core.Attributes;
-using HardwareStore.DTOs;
-using HardwareStore.Core.Pagination;
-using HardwareStore.Core;
-using HardwareStore.Services;
-using HardwareStore.Data.Entities;
+﻿using Microsoft.AspNetCore.Mvc; 
+using HardwareStore.DTOs; 
+using HardwareStore.Core; 
+using HardwareStore.Data.Entities; 
 using AspNetCoreHero.ToastNotification.Abstractions;
+using HardwareStore.Services;
+using HardwareStore.Core.Pagination;
 
-namespace HardwareStore.Controllers
+namespace HardwareStore.Controllers 
 {
-    public class RolesController : Controller
+    public class RolesController : Controller 
     {
-        private IRolesService _rolesService;
-        private readonly INotyfService _noty;
+        private IRolesService _rolesService; 
+        private readonly INotyfService _noty; 
 
+        // Constructor de la clase RolesController.
         public RolesController(IRolesService rolesService, INotyfService noty)
         {
-            _rolesService = rolesService;
-            _noty = noty;
+            _rolesService = rolesService; 
+            _noty = noty; 
         }
 
+        //  para mostrar la lista de roles.
         [HttpGet]
         //[CustomAuthorize(permission: "showRoles", module: "Roles")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
                                                [FromQuery] int? Page,
                                                [FromQuery] string? Filter)
         {
+            // solicitud de paginación.
             PaginationRequest paginationRequest = new PaginationRequest
             {
                 RecordsPerPage = RecordsPerPage ?? 15,
@@ -33,15 +35,18 @@ namespace HardwareStore.Controllers
                 Filter = Filter,
             };
 
+            // la lista de roles.
             Response<PaginationResponse<Role>> response = await _rolesService.GetListAsync(paginationRequest);
 
             return View(response.Result);
         }
 
+        //  para mostrar el formulario de creación de rol.
         [HttpGet]
         //[CustomAuthorize(permission: "createRoles", module: "Roles")]
         public async Task<IActionResult> Create()
         {
+            // la lista de permisos
             Response<IEnumerable<Permission>> response = await _rolesService.GetPermissionsAsync();
 
             if (!response.IsSuccess)
@@ -50,6 +55,7 @@ namespace HardwareStore.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
+            // Crea un DTO para el formulario de creación de rol.
             RoleDTO dto = new RoleDTO
             {
                 Permissions = response.Result.Select(p => new PermissionForDTO
@@ -60,13 +66,15 @@ namespace HardwareStore.Controllers
                     Module = p.Module,
                 }).ToList()
             };
-            return View(dto);
+            return View(dto); 
         }
 
+        //  para procesar el formulario de creación de rol.
         [HttpPost]
         //[CustomAuthorize(permission: "createRoles", module: "Roles")]
         public async Task<IActionResult> Create(RoleDTO dto)
         {
+            //  la lista de permisos
             Response<IEnumerable<Permission>> permissionsResponse = await _rolesService.GetPermissionsAsync();
 
             if (!ModelState.IsValid)
@@ -84,6 +92,7 @@ namespace HardwareStore.Controllers
                 return View(dto);
             }
 
+            //  el rol
             Response<Role> createResponse = await _rolesService.CreateAsync(dto);
 
             if (createResponse.IsSuccess)
@@ -104,10 +113,12 @@ namespace HardwareStore.Controllers
             return View(dto);
         }
 
+        //  para mostrar el formulario de edición de rol.
         [HttpGet]
         //[CustomAuthorize(permission: "updateRoles", module: "Roles")]
         public async Task<IActionResult> Edit(int id)
         {
+            //  la información del rol para edición
             Response<RoleDTO> response = await _rolesService.GetOneAsync(id);
 
             if (!response.IsSuccess)
@@ -116,9 +127,10 @@ namespace HardwareStore.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(response.Result);
+            return View(response.Result); 
         }
 
+        //  para procesar el formulario de edición de rol.
         [HttpPost]
         //[CustomAuthorize(permission: "updateRoles", module: "Roles")]
         public async Task<IActionResult> Edit(RoleDTO dto)
@@ -127,12 +139,14 @@ namespace HardwareStore.Controllers
             {
                 _noty.Error("Debe ajustar los errores de validación.");
 
+                // Obtiene los permisos del rol para mostrarlos en el formulario.
                 Response<IEnumerable<PermissionForDTO>> res = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
                 dto.Permissions = res.Result.ToList();
 
                 return View(dto);
             }
 
+            //edita el rol
             Response<Role> response = await _rolesService.EditAsync(dto);
 
             if (response.IsSuccess)
@@ -142,15 +156,18 @@ namespace HardwareStore.Controllers
             }
 
             _noty.Error(response.Errors.First());
+            // obtiene los permisos del rol
             Response<IEnumerable<PermissionForDTO>> res2 = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
             dto.Permissions = res2.Result.ToList();
             return View(dto);
         }
 
+        //  para eliminar un rol.
         [HttpPost]
         //[CustomAuthorize("deleteRoles", "Roles")]
         public async Task<IActionResult> Delete(int id)
         {
+            // Elimina el rol 
             Response<object> response = await _rolesService.DeleteAsync(id);
 
             if (!response.IsSuccess)

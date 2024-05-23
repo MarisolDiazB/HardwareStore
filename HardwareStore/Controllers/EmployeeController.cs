@@ -1,47 +1,55 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions;
-using HardwareStore.Core;
-using HardwareStore.Data.Entities;
-using HardwareStore.Services;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Threading.Tasks;
+﻿using AspNetCoreHero.ToastNotification.Abstractions; // Importa la interfaz para el servicio de notificaciones.
+
+using HardwareStore.Core; 
+using HardwareStore.Data.Entities; 
+using HardwareStore.Services; 
+using Microsoft.AspNetCore.Mvc; // Importa el espacio de nombres de ASP.NET Core para MVC.
+using System; // Importa el espacio de nombres System para manejar excepciones.
+using System.Threading.Tasks; // Importa el espacio de nombres para trabajar con tareas asincrónicas.
 
 namespace HardwareStore.Controllers
 {
-    public class EmployeeController : Controller
+    public class EmployeeController : Controller 
     {
-        private readonly IEmployeeServices _services;
-        private readonly INotyfService _notify;
+        private readonly IEmployeeServices _services; 
+        private readonly INotyfService _notify; 
 
+        // Constructor de la clase EmployeeController.
         public EmployeeController(IEmployeeServices employeeServices, INotyfService notify)
         {
-            _services = employeeServices;
-            _notify = notify;
+            _services = employeeServices; 
+            _notify = notify; 
         }
 
+        //para mostrar la lista de empleados.
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            var response = await _services.GetListEmployeeAsync();
-            return View(response.Result);
+            var response = await _services.GetListEmployeeAsync(); // obtiene la lista
+            return View(response.Result); // devuelve la vista con la lista de empleados.
         }
 
+        //para mostrar el formulario de creación de empleado.
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            return View(); // Devuelve la vista para crear un nuevo empleado.
         }
 
+        // para procesar el formulario de creación de empleado.
         [HttpPost]
         public async Task<IActionResult> Create(Employee model)
         {
             try
             {
+                
                 if (!ModelState.IsValid)
                 {
                     _notify.Error("Debe ajustar los errores de validación.");
                     return View(model);
                 }
+
+              
                 var response = await _services.CreateEmployeeAsync(model);
 
                 if (response.IsSuccess)
@@ -60,6 +68,7 @@ namespace HardwareStore.Controllers
             }
         }
 
+        //para mostrar el formulario de edición de empleado.
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -74,19 +83,23 @@ namespace HardwareStore.Controllers
             return View(response.Result);
         }
 
+        //para procesar el formulario de edición de empleado.
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Employee model)
         {
             try
             {
+               
                 if (!ModelState.IsValid)
                 {
                     _notify.Error("Debe ajustar los errores de validación.");
                     return View(model);
                 }
 
+                // edita el empleado
                 var response = await _services.EditEmployeeAsync(model);
 
+       
                 if (response.IsSuccess)
                 {
                     _notify.Success(response.Message);
@@ -103,6 +116,7 @@ namespace HardwareStore.Controllers
             }
         }
 
+        // para eliminar un empleado.
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
