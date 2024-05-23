@@ -4,16 +4,14 @@ using HardwareStore.Data;
 using HardwareStore.Data.Entities;
 using HardwareStore.Helpers;
 using HardwareStore.Requests;
-using System.Collections.Generic;
-using static HardwareStore.Services.IEmployeeServices;
-using static System.Collections.Specialized.BitVector32;
+using HardwareStore.Core.Pagination;
 
 namespace HardwareStore.Services
 {
     public interface IEmployeeServices
     {
         public Task<Response<Employee>> CreateEmployeeAsync(Employee model);//Crear un Empleado
-        public Task<Response<List<Employee>>> GetListEmployeeAsync();//Trae una lista de los empleados
+        Task<Response<PaginationResponse<Employee>>> GetListAsync(PaginationRequest request);//Trae una lista de los empleados
         public Task<Response<Employee>> GetOneEmployeeAsync(int id);//Trae un empleado segun su id
         public Task<Response<Employee>> EditEmployeeAsync(Employee model);//Edita a un empleado
         public Task<Response<Employee>> DeleteEmployeeAsync(int id);//Elimina el empleado        
@@ -69,17 +67,52 @@ namespace HardwareStore.Services
                     return ResponseHelper<Employee>.MakeResponseFail(ex);
                 }
             }
-            public async Task<Response<List<Employee>>> GetListEmployeeAsync()
+
+            public async Task<Response<PaginationResponse<Employee>>> GetListAsync(PaginationRequest request)
             {
                 try
                 {
-                    List<Employee> list = await _context.Employees.ToListAsync();
+                    // Obtener la consulta base de empleados
+                    IQueryable<Employee> queryable = _context.Employees.AsQueryable();
 
-                    return ResponseHelper<List<Employee>>.MakeResponseSuccess(list, "Empleados obtenidos con éxito");
+                    // Aplicar filtrado si se proporciona
+                    if (!string.IsNullOrWhiteSpace(request.Filter))
+                    {
+                        string filter = request.Filter.ToLower(); // Convertir el filtro a minúsculas para una comparación insensible a mayúsculas y minúsculas
+                        queryable = queryable.Where(b => b.FirstName.ToLower().Contains(filter) || b.LastName.ToLower().Contains(filter));
+                    }
+
+                    // Seleccionar solo los campos necesarios
+                    queryable = queryable.Select(b => new Employee
+                    {
+                        Id = b.Id,
+                        FirstName = b.FirstName,
+                        LastName = b.LastName,
+                        Age = b.Age,
+                        IsActive = b.IsActive
+                    });
+
+                    // Obtener la lista paginada
+                    PagedList<Employee> pagedList = await PagedList<Employee>.ToPagedListAsync(queryable, request);
+
+                    // Crear el objeto de respuesta de paginación
+                    PaginationResponse<Employee> result = new PaginationResponse<Employee>
+                    {
+                        List = pagedList,
+                        TotalCount = pagedList.TotalCount,
+                        RecordsPerPage = pagedList.RecordsPerPage,
+                        CurrentPage = pagedList.CurrentPage,
+                        TotalPages = pagedList.TotalPages,
+                        Filter = request.Filter,
+                    };
+
+                    // Devolver la respuesta exitosa
+                    return ResponseHelper<PaginationResponse<Employee>>.MakeResponseSuccess(result);
                 }
                 catch (Exception ex)
                 {
-                    return ResponseHelper<List<Employee>>.MakeResponseFail(ex);
+                    // Capturar excepciones y devolver una respuesta de error
+                    return ResponseHelper<PaginationResponse<Employee>>.MakeResponseFail(ex);
                 }
             }
             public async Task<Response<Employee>> EditEmployeeAsync(Employee model)

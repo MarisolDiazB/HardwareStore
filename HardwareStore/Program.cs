@@ -25,7 +25,9 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<IProductServices, ProductService>();
 builder.Services.AddScoped<IEmployeeServices, EmployeeService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IRolesService, RolesService>();
 builder.Services.AddScoped<IConverterHelper, ConverterHelper>();
+builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<INotyfService, NotyfService>();
 
 builder.Services.AddNotyf(config =>
@@ -65,5 +67,4 @@ void SeedData(WebApplication app)
     var services = scope.ServiceProvider;
     var seedService = services.GetRequiredService<SeedDb>();
 
-    seedService.SeedAsync().Wait();
 }

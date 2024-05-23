@@ -68,30 +68,45 @@ namespace HardwareStore.Services
             {
                 try
                 {
+                    // Obtener la consulta base de empleados
                     IQueryable<Products> queryable = _context.Products.AsQueryable();
 
+                    // Aplicar filtrado si se proporciona
                     if (!string.IsNullOrWhiteSpace(request.Filter))
                     {
-                        queryable = queryable.Where(s => s.Name.ToLower().Contains(request.Filter.ToLower()));
+                        string filter = request.Filter.ToLower(); 
+                        queryable = queryable.Where(b => b.Name.ToLower().Contains(filter));
                     }
 
-                    PagedList<Products> list = await PagedList<Products>.ToPagedListAsync(queryable, request);
+                    // Seleccionar solo los campos necesarios
+                    queryable = queryable.Select(b => new Products
+                    {
+                        Id = b.Id,
+                        Name = b.Name,
+                        Price = b.Price,
+                        Stock = b.Stock
+                    });
 
+                    // Obtener la lista paginada
+                    PagedList<Products> pagedList = await PagedList<Products>.ToPagedListAsync(queryable, request);
 
+                    // Crear el objeto de respuesta de paginación
                     PaginationResponse<Products> result = new PaginationResponse<Products>
                     {
-                        List = list,
-                        TotalCount = list.TotalCount,
-                        RecordsPerPage = list.RecordsPerPage,
-                        CurrentPage = list.CurrentPage,
-                        TotalPages = list.TotalPages,
+                        List = pagedList,
+                        TotalCount = pagedList.TotalCount,
+                        RecordsPerPage = pagedList.RecordsPerPage,
+                        CurrentPage = pagedList.CurrentPage,
+                        TotalPages = pagedList.TotalPages,
                         Filter = request.Filter,
                     };
 
-                    return ResponseHelper<PaginationResponse<Products>>.MakeResponseSuccess(result, "Secciones obtenidas con éxito");
+                    // Devolver la respuesta exitosa
+                    return ResponseHelper<PaginationResponse<Products>>.MakeResponseSuccess(result);
                 }
                 catch (Exception ex)
                 {
+                    // Capturar excepciones y devolver una respuesta de error
                     return ResponseHelper<PaginationResponse<Products>>.MakeResponseFail(ex);
                 }
             }

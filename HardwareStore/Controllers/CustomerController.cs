@@ -1,80 +1,67 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions; // importa la interfaz para el servicio de notificaciones.
-<<<<<<< HEAD
-using HardwareStore.Core.Pagination;
 using HardwareStore.Data.Entities;
 using HardwareStore.Services;
-=======
-using HardwareStore.Core.Pagination; 
-using HardwareStore.Data.Entities; 
-using HardwareStore.Services; 
->>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
-using Microsoft.AspNetCore.Mvc; // importa el espacio de nombres de ASP.NET Core para MVC.
-
-namespace HardwareStore.Controllers 
+using Microsoft.AspNetCore.Mvc;
+using HardwareStore.Core.Pagination;
+using HardwareStore.Helpers;
+using HardwareStore.Core;
+namespace HardwareStore.Controllers
 {
-    public class CustomerController : Controller 
+    public class CustomerController : Controller
     {
-<<<<<<< HEAD
         private readonly ICustomerService _services;
+        private readonly ICombosHelper _combosHelper;
         private readonly INotyfService _notify;
-        private const int PageSize = 10;
-=======
-        private readonly ICustomerService _services; 
-        private readonly INotyfService _notify; 
-        private const int PageSize = 10; 
->>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
 
-        // constructor de la clase CustomerController.
-        public CustomerController(ICustomerService customerService, INotyfService notify)
+        // Constructor de la clase CustomerController.
+        public CustomerController(ICustomerService customerService, INotyfService notify, ICombosHelper combosHelper)
         {
-            _services = customerService; // Inicializa
-<<<<<<< HEAD
+            _services = customerService;
             _notify = notify;
-=======
-            _notify = notify; 
->>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
+            _combosHelper = combosHelper;
         }
 
-        // mostrar la lista de clientes.
         [HttpGet]
-        public async Task<IActionResult> Index(int pageNumber = 1)
+        public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
+                                       [FromQuery] int? Page,
+                                       [FromQuery] string? Filter)
         {
-            //  solicitud de paginación.
-            var paginationRequest = new PaginationRequest
+            try
             {
-                PageNumber = pageNumber,
-                RecordsPerPage = PageSize
-            };
+                PaginationRequest paginationRequest = new PaginationRequest
+                {
+                    RecordsPerPage = RecordsPerPage ?? 15,
+                    Page = Page ?? 1,
+                    Filter = Filter,
+                };
+                Response<PaginationResponse<Customer>> response = await _services.GetListAsync(paginationRequest);
 
-            // obtiene la lista de clientes de forma asincrónica.
-            var response = await _services.GetListAsync(paginationRequest);
-            var customers = response.Result;
-            var totalItems = response.Result.Count;
-
-            // el ViewModel para la paginación.
-            var viewModel = new PaginacionViewModel
+                if (response != null && response.IsSuccess && response.Result != null)
+                {
+                    return View(response.Result);
+                }
+                else
+                {
+                    _notify.Error("Ocurrió un error al obtener la lista de Clientes.");
+                    return View(new PaginationResponse<Customer>());
+                }
+            }
+            catch (Exception ex)
             {
-                Customers = customers,
-                PaginaActual = pageNumber,
-                TotalPaginas = (int)Math.Ceiling(totalItems / (double)PageSize)
-            };
-
-<<<<<<< HEAD
-
-=======
-  
->>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
-            return View(viewModel);
+                _notify.Error("Ocurrió un error al obtener la lista de Clientes: " + ex.Message);
+                return View(new PaginationResponse<Customer>());
+            }
         }
 
-        // para mostrar el formulario de creación de cliente.
+        // Para mostrar el formulario de creación de cliente.
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            ViewBag.EmployeeList = await _combosHelper.GetComboEmployees();
             return View();
         }
 
-        // para procesar 
+        // Para procesar la creación de un cliente.
         [HttpPost]
         public async Task<IActionResult> Create(Customer model)
         {
@@ -84,6 +71,7 @@ namespace HardwareStore.Controllers
                 if (!ModelState.IsValid)
                 {
                     _notify.Error("Debe ajustar los errores de validación.");
+                    ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
                     return View(model);
                 }
 
@@ -98,16 +86,18 @@ namespace HardwareStore.Controllers
                 }
 
                 _notify.Error(response.Message);
+                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
                 return View(model);
             }
             catch (Exception ex)
             {
                 _notify.Error(ex.Message);
+                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
                 return View(model);
             }
         }
 
-        //  para mostrar el formulario de edición de cliente.
+        // Para mostrar el formulario de edición de cliente.
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -116,6 +106,7 @@ namespace HardwareStore.Controllers
             if (response.IsSuccess)
             {
                 var customer = response.Result;
+                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees();
                 return View(customer);
             }
             else
@@ -125,22 +116,23 @@ namespace HardwareStore.Controllers
             }
         }
 
-        // para procesar 
+        // Para procesar la edición de un cliente.
         [HttpPost]
         public async Task<IActionResult> Edit(int id, Customer model)
         {
             try
             {
-                // valida el modelo.
+                // Valida el modelo.
                 if (!ModelState.IsValid)
                 {
                     _notify.Error("Debe ajustar los errores de validación.");
+                    ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
                     return View(model);
                 }
 
                 model.Id = id;
 
-                // edita el cliente de forma asincrónica.
+                // Edita el cliente de forma asincrónica.
                 var response = await _services.EditAsync(model);
 
                 if (response.IsSuccess)
@@ -150,29 +142,26 @@ namespace HardwareStore.Controllers
                 }
 
                 _notify.Error(response.Message);
+                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
                 return View(model);
             }
             catch (Exception ex)
             {
                 _notify.Error(ex.Message);
+                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
                 return View(model);
             }
         }
 
-        // para eliminar un cliente.
+        // Para eliminar un cliente.
         [HttpPost]
         public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                // elimina el cliente de forma asincrónica.
+                // Elimina el cliente de forma asincrónica.
                 var response = await _services.DeleteAsync(id);
 
-<<<<<<< HEAD
-
-=======
-                
->>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
                 if (response.IsSuccess)
                 {
                     _notify.Success(response.Message);
@@ -190,8 +179,4 @@ namespace HardwareStore.Controllers
             return RedirectToAction(nameof(Index));
         }
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 50c25fa775e1463912e04e61b211578f7f4efd8f
