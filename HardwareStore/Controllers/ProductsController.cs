@@ -15,21 +15,42 @@ namespace HardwareStore.Controllers
         private readonly IProductServices _services; 
         private readonly INotyfService _notify; 
 
-        // Constructor de la clase ProductsController.
         public ProductsController(IProductServices productServices, INotyfService notify)
         {
             _services = productServices; 
             _notify = notify; 
         }
 
-        // para mostrar la lista de productos.
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
+                                       [FromQuery] int? Page,
+                                       [FromQuery] string? Filter)
         {
-            var paginationRequest = new PaginationRequest(); // una solicitud de paginación vacía.
-            var response = await _services.GetListAsync(paginationRequest); // la lista de productos de forma asincrónica.
-            var product = response.Result.List; 
-            return View(product); 
+            try
+            {
+                PaginationRequest paginationRequest = new PaginationRequest
+                {
+                    RecordsPerPage = RecordsPerPage ?? 15,
+                    Page = Page ?? 1,
+                    Filter = Filter,
+                };
+                Response<PaginationResponse<Products>> response = await _services.GetListAsync(paginationRequest);
+
+                if (response != null && response.IsSuccess && response.Result != null)
+                {
+                    return View(response.Result);
+                }
+                else
+                {
+                    _notify.Error("Ocurrió un error al obtener la lista de Productos.");
+                    return View(new PaginationResponse<Products>());
+                }
+            }
+            catch (Exception ex)
+            {
+                _notify.Error("Ocurrió un error al obtener la lista de Productos: " + ex.Message);
+                return View(new PaginationResponse<Products>());
+            }
         }
 
         //  para mostrar el formulario de creación de producto.

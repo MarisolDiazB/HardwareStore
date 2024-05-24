@@ -1,32 +1,58 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions; // Importa la interfaz para el servicio de notificaciones.
-
-using HardwareStore.Core; 
-using HardwareStore.Data.Entities; 
-using HardwareStore.Services; 
-using Microsoft.AspNetCore.Mvc; // Importa el espacio de nombres de ASP.NET Core para MVC.
-using System; // Importa el espacio de nombres System para manejar excepciones.
-using System.Threading.Tasks; // Importa el espacio de nombres para trabajar con tareas asincrónicas.
+﻿using AspNetCoreHero.ToastNotification.Abstractions; // importa la interfaz para el servicio de notificaciones.
+using HardwareStore.Data.Entities;
+using HardwareStore.Services;
+using Microsoft.AspNetCore.Mvc;
+using HardwareStore.Core.Pagination;
+using HardwareStore.Helpers;
+using HardwareStore.Core;
 
 namespace HardwareStore.Controllers
 {
     public class EmployeeController : Controller 
     {
-        private readonly IEmployeeServices _services; 
-        private readonly INotyfService _notify; 
+        private readonly IEmployeeServices _services;
+        private readonly ICombosHelper _combosHelper;
+        private readonly INotyfService _notify;
 
         // Constructor de la clase EmployeeController.
-        public EmployeeController(IEmployeeServices employeeServices, INotyfService notify)
+        public EmployeeController(IEmployeeServices employeeServices, INotyfService notify, ICombosHelper combosHelper)
         {
             _services = employeeServices; 
             _notify = notify; 
+            _combosHelper = combosHelper;
         }
 
         //para mostrar la lista de empleados.
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
+                                       [FromQuery] int? Page,
+                                       [FromQuery] string? Filter)
         {
-            var response = await _services.GetListEmployeeAsync(); // obtiene la lista
-            return View(response.Result); // devuelve la vista con la lista de empleados.
+            try
+            {
+                PaginationRequest paginationRequest = new PaginationRequest
+                {
+                    RecordsPerPage = RecordsPerPage ?? 15,
+                    Page = Page ?? 1,
+                    Filter = Filter,
+                };
+                Response<PaginationResponse<Employee>> response = await _services.GetListAsync(paginationRequest);
+
+                if (response != null && response.IsSuccess && response.Result != null)
+                {
+                    return View(response.Result);
+                }
+                else
+                {
+                    _notify.Error("Ocurrió un error al obtener la lista de Empleados.");
+                    return View(new PaginationResponse<Employee>());
+                }
+            }
+            catch (Exception ex)
+            {
+                _notify.Error("Ocurrió un error al obtener la lista de Empleados: " + ex.Message);
+                return View(new PaginationResponse<Employee>());
+            }
         }
 
         //para mostrar el formulario de creación de empleado.

@@ -1,21 +1,15 @@
-﻿// Este archivo define la clase ConverterHelper en el espacio de nombres HardwareStore.Helpers.
-
-using HardwareStore.Data.Entities; // Importa los espacios de nombres necesarios.
+﻿using HardwareStore.Data.Entities; 
 using HardwareStore.Data;
 using HardwareStore.DTOs;
 using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic; // Importa el espacio de nombres para List<T>.
-using System.Threading.Tasks; // Importa el espacio de nombres para Task y Task<T>.
+
 
 namespace HardwareStore.Helpers
 {
-    // Define una interfaz IConverterHelper para la conversión entre objetos Role y RoleDTO.
     public interface IConverterHelper
     {
-        // Método para convertir un objeto RoleDTO en un objeto Role.
         public Role ToRole(RoleDTO dto);
 
-        // Método asincrónico para convertir un objeto Role en un objeto RoleDTO.
         public Task<RoleDTO> ToRoleDTOAsync(Role role);
     }
 

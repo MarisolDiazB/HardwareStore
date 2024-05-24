@@ -69,7 +69,6 @@ namespace HardwareStore.Controllers
             return View(dto); 
         }
 
-        //  para procesar el formulario de creación de rol.
         [HttpPost]
         //[CustomAuthorize(permission: "createRoles", module: "Roles")]
         public async Task<IActionResult> Create(RoleDTO dto)
@@ -91,8 +90,6 @@ namespace HardwareStore.Controllers
 
                 return View(dto);
             }
-
-            //  el rol
             Response<Role> createResponse = await _rolesService.CreateAsync(dto);
 
             if (createResponse.IsSuccess)
@@ -130,7 +127,7 @@ namespace HardwareStore.Controllers
             return View(response.Result); 
         }
 
-        //  para procesar el formulario de edición de rol.
+
         [HttpPost]
         //[CustomAuthorize(permission: "updateRoles", module: "Roles")]
         public async Task<IActionResult> Edit(RoleDTO dto)
@@ -146,7 +143,6 @@ namespace HardwareStore.Controllers
                 return View(dto);
             }
 
-            //edita el rol
             Response<Role> response = await _rolesService.EditAsync(dto);
 
             if (response.IsSuccess)
@@ -162,7 +158,6 @@ namespace HardwareStore.Controllers
             return View(dto);
         }
 
-        //  para eliminar un rol.
         [HttpPost]
         //[CustomAuthorize("deleteRoles", "Roles")]
         public async Task<IActionResult> Delete(int id)
