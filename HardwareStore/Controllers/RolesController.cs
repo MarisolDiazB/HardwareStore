@@ -11,34 +11,45 @@ namespace HardwareStore.Controllers
     public class RolesController : Controller 
     {
         private IRolesService _rolesService; 
-        private readonly INotyfService _noty; 
+        private readonly INotyfService _notify; 
 
         // Constructor de la clase RolesController.
         public RolesController(IRolesService rolesService, INotyfService noty)
         {
-            _rolesService = rolesService; 
-            _noty = noty; 
+            _rolesService = rolesService;
+            _notify = noty; 
         }
 
-        //  para mostrar la lista de roles.
         [HttpGet]
-        //[CustomAuthorize(permission: "showRoles", module: "Roles")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
-                                               [FromQuery] int? Page,
-                                               [FromQuery] string? Filter)
+                                       [FromQuery] int? Page,
+                                       [FromQuery] string? Filter)
         {
-            // solicitud de paginación.
-            PaginationRequest paginationRequest = new PaginationRequest
+            try
             {
-                RecordsPerPage = RecordsPerPage ?? 15,
-                Page = Page ?? 1,
-                Filter = Filter,
-            };
+                PaginationRequest paginationRequest = new PaginationRequest
+                {
+                    RecordsPerPage = RecordsPerPage ?? 15,
+                    Page = Page ?? 1,
+                    Filter = Filter,
+                };
+                Response<PaginationResponse<Role>> response = await _rolesService.GetListAsync(paginationRequest);
 
-            // la lista de roles.
-            Response<PaginationResponse<Role>> response = await _rolesService.GetListAsync(paginationRequest);
-
-            return View(response.Result);
+                if (response != null && response.IsSuccess && response.Result != null)
+                {
+                    return View(response.Result);
+                }
+                else
+                {
+                    _notify.Error("Ocurrió un error al obtener la lista de roles.");
+                    return View(new PaginationResponse<Role>());
+                }
+            }
+            catch (Exception ex)
+            {
+                _notify.Error("Ocurrió un error al obtener la lista de roles: " + ex.Message);
+                return View(new PaginationResponse<Role>());
+            }
         }
 
         //  para mostrar el formulario de creación de rol.
@@ -51,7 +62,7 @@ namespace HardwareStore.Controllers
 
             if (!response.IsSuccess)
             {
-                _noty.Error(response.Message);
+                _notify.Error(response.Message);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -78,7 +89,7 @@ namespace HardwareStore.Controllers
 
             if (!ModelState.IsValid)
             {
-                _noty.Error("Debe ajustar los errores de validación.");
+                _notify.Error("Debe ajustar los errores de validación.");
 
                 dto.Permissions = permissionsResponse.Result.Select(p => new PermissionForDTO
                 {
@@ -94,11 +105,11 @@ namespace HardwareStore.Controllers
 
             if (createResponse.IsSuccess)
             {
-                _noty.Success(createResponse.Message);
+                _notify.Success(createResponse.Message);
                 return RedirectToAction(nameof(Index));
             }
 
-            _noty.Error(createResponse.Message);
+            _notify.Error(createResponse.Message);
             dto.Permissions = permissionsResponse.Result.Select(p => new PermissionForDTO
             {
                 Id = p.Id,
@@ -120,7 +131,7 @@ namespace HardwareStore.Controllers
 
             if (!response.IsSuccess)
             {
-                _noty.Error(response.Message);
+                _notify.Error(response.Message);
                 return RedirectToAction(nameof(Index));
             }
 
@@ -134,7 +145,7 @@ namespace HardwareStore.Controllers
         {
             if (!ModelState.IsValid)
             {
-                _noty.Error("Debe ajustar los errores de validación.");
+                _notify.Error("Debe ajustar los errores de validación.");
 
                 // Obtiene los permisos del rol para mostrarlos en el formulario.
                 Response<IEnumerable<PermissionForDTO>> res = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
@@ -147,11 +158,11 @@ namespace HardwareStore.Controllers
 
             if (response.IsSuccess)
             {
-                _noty.Success(response.Message);
+                _notify.Success(response.Message);
                 return RedirectToAction(nameof(Index));
             }
 
-            _noty.Error(response.Errors.First());
+            _notify.Error(response.Errors.First());
             // obtiene los permisos del rol
             Response<IEnumerable<PermissionForDTO>> res2 = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
             dto.Permissions = res2.Result.ToList();
@@ -167,11 +178,11 @@ namespace HardwareStore.Controllers
 
             if (!response.IsSuccess)
             {
-                _noty.Error(response.Message);
+                _notify.Error(response.Message);
                 return RedirectToAction(nameof(Index));
             }
 
-            _noty.Success(response.Message);
+            _notify.Success(response.Message);
             return RedirectToAction(nameof(Index));
         }
     }
