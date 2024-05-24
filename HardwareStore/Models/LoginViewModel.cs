@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-public class LoginViewModel
+namespace HardwareStore.Models
 {
+public class LoginViewModel
+    {
     [Required]
     [EmailAddress]
     public string Email { get; set; }
@@ -12,4 +14,5 @@ public class LoginViewModel
 
     [Display(Name = "Remember me?")]
     public bool RememberMe { get; set; }
+    }
 }

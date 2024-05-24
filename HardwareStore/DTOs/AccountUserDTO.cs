@@ -1,10 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity; // Importa el espacio de nombres para la funcionalidad de Identity.
-using System.ComponentModel.DataAnnotations; // Importa el espacio de nombres para atributos de validación.
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace HardwareStore.Data.Entities // Define el espacio de nombres y declara la clase User.
+namespace HardwareStore.DTOs
 {
-    public class User : IdentityUser // Declara la clase User, que hereda de IdentityUser proporcionada por ASP.NET Core Identity.
+    public class AccountUserDTO
     {
+        public Guid Id { get; set; }
+
         [Display(Name = "Documento")]
         [MaxLength(32, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
@@ -20,15 +21,10 @@ namespace HardwareStore.Data.Entities // Define el espacio de nombres y declara 
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
         public string LastName { get; set; } = null!;
 
-        [Display(Name = "Foto")]
-        public string? Photo { get; set; }
-
-        [Display(Name = "Usuario")]
-        public string FullName => $"{FirstName} {LastName}";
-
+        [Display(Name = "Teléfono")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public int RoleId { get; set; }
+        public string PhoneNumber { get; set; } = null!;
 
-        public Role Role { get; set; } = null!;
+        public string Email { get; set; }
     }
 }
