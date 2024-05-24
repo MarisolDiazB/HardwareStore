@@ -37,7 +37,7 @@
 </table>
 
 <div>
-    @if (Model.PaginaActual > 1)
+    @if (Model.PaginaActual > 1)//CAMBIAR INGLES
     {
         <a href="@Url.Action("Index", new { pageNumber = Model.PaginaActual - 1 })">Anterior</a>
     }

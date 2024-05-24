@@ -2,7 +2,8 @@
 using HardwareStore.Core.Pagination; 
 using HardwareStore.Data.Entities; 
 using HardwareStore.Services; 
-using Microsoft.AspNetCore.Mvc; // importa el espacio de nombres de ASP.NET Core para MVC.
+using Microsoft.AspNetCore.Mvc;
+using PrivateBlog.Web.DTOs; // importa el espacio de nombres de ASP.NET Core para MVC.
 
 namespace HardwareStore.Controllers 
 {
@@ -10,7 +11,7 @@ namespace HardwareStore.Controllers
     {
         private readonly ICustomerService _services; 
         private readonly INotyfService _notify; 
-        private const int PageSize = 10; 
+        private const int PageSize = 5; 
 
         // constructor de la clase CustomerController.
         public CustomerController(ICustomerService customerService, INotyfService notify)
@@ -46,6 +47,30 @@ namespace HardwareStore.Controllers
   
             return View(viewModel);
         }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginDTO dto)
+        {
+            if (ModelState.IsValid)
+            {
+                Microsoft.AspNetCore.Identity.SignInResult result = await _services.LoginAsync(dto);
+                if (result.Succeeded)
+                {
+                    if (Request.Query.Keys.Contains("ReturnUrl"))
+                    {
+                        return Redirect(Request.Query["ReturnUrl"].First());
+                    }
+
+                    return RedirectToAction("Dashboard", "Home");
+                }
+
+                ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos");
+                _notify.Error("Email o contraseña incorrectos");
+            }
+
+            return View(dto);
+        }
+
 
         // para mostrar el formulario de creación de cliente.
         [HttpGet]
