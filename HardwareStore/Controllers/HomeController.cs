@@ -1,7 +1,7 @@
-using HardwareStore.Models; 
-using Microsoft.AspNetCore.Mvc; 
-using System.Diagnostics; 
-
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using HardwareStore.Models;
+using System.Diagnostics;
 namespace HardwareStore.Controllers 
 {
     public class HomeController : Controller 
@@ -21,16 +21,15 @@ namespace HardwareStore.Controllers
         }
 
         // para mostrar la vista de privacidad.
+        [AllowAnonymous]
         public IActionResult Privacy()
         {
             return View();
         }
 
-        // para manejar errores.
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
-            // para mostrar información de error.
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }

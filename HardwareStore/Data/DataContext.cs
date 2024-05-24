@@ -1,14 +1,16 @@
-﻿using HardwareStore.Data.Entities; // Importa el espacio de nombres de las entidades de datos.
-using Microsoft.EntityFrameworkCore; // Importa el espacio de nombres de Entity Framework Core.
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using HardwareStore.Data.Entities; // Importa el espacio de nombres de Entity Framework Core.
 
 namespace HardwareStore.Data // Define el espacio de nombres y declara la clase DataContext.
 {
-    public class DataContext : DbContext // Declara la clase DataContext que hereda de DbContext.
+    public class DataContext : IdentityDbContext<User> // Declara la clase DataContext que hereda de DbContext.
     {
         // Constructor de la clase DataContext que recibe las opciones de DbContext como parámetro.
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
         }
+
 
         // Define un conjunto de entidades para la entidad Products.
         public DbSet<Products> Products { get; set; }
@@ -27,6 +29,7 @@ namespace HardwareStore.Data // Define el espacio de nombres y declara la clase 
 
         // Define un conjunto de entidades para la entidad RolePermission.
         public DbSet<RolePermission> RolePermissions { get; set; }
+
 
         // Método para configurar las relaciones de muchos a muchos entre Role y Permission.
         protected override void OnModelCreating(ModelBuilder modelBuilder)
