@@ -42,7 +42,7 @@
                             <td> @Html.DisplayFor(modelItem => item.Stock) </td>
                             <td>
                                 <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                                <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este Producto?');">
+                                <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este rol?');">
                                     <input type="hidden" name="id" value="@item.Id" />
                                     <button type="submit">Eliminar</button>
                                 </form>
@@ -55,7 +55,7 @@
         else
         {
             <div class="alert alert-danger" role="alert">
-                Ocurrió un error al obtener la lista de empleados.
+                Ocurrió un error al obtener la lista de productos.
             </div>
         }
         @* Pagination *@

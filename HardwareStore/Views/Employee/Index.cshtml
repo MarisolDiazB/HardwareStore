@@ -44,7 +44,7 @@
                             <td> @Html.DisplayFor(modelItem => item.IsActive)</td>
                             <td>
                                 <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                                <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este Producto?');">
+                                <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este Empleado?');">
                                     <input type="hidden" name="id" value="@item.Id" />
                                     <button type="submit">Eliminar</button>
                                 </form>

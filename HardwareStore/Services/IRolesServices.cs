@@ -172,25 +172,34 @@ namespace HardwareStore.Services
 
                 if (!string.IsNullOrWhiteSpace(request.Filter))
                 {
-                    queryable = queryable.Where(s => s.Name.ToLower().Contains(request.Filter.ToLower()));
+                    string filter = request.Filter.ToLower(); 
+                    queryable = queryable.Where(b => b.Name.ToLower().Contains(filter));
                 }
 
-                PagedList<Role> list = await PagedList<Role>.ToPagedListAsync(queryable, request);
+                queryable = queryable.Select(b => new Role
+                {
+                    Id = b.Id,
+                    Name = b.Name
+                });
+
+                PagedList<Role> pagedList = await PagedList<Role>.ToPagedListAsync(queryable, request);
 
                 PaginationResponse<Role> result = new PaginationResponse<Role>
                 {
-                    List = list,
-                    TotalCount = list.TotalCount,
-                    RecordsPerPage = list.RecordsPerPage,
-                    CurrentPage = list.CurrentPage,
-                    TotalPages = list.TotalPages,
+                    List = pagedList,
+                    TotalCount = pagedList.TotalCount,
+                    RecordsPerPage = pagedList.RecordsPerPage,
+                    CurrentPage = pagedList.CurrentPage,
+                    TotalPages = pagedList.TotalPages,
                     Filter = request.Filter,
                 };
 
-                return ResponseHelper<PaginationResponse<Role>>.MakeResponseSuccess(result, "Roles obtenidas con éxito");
+                // Devolver la respuesta exitosa
+                return ResponseHelper<PaginationResponse<Role>>.MakeResponseSuccess(result);
             }
             catch (Exception ex)
             {
+                // Capturar excepciones y devolver una respuesta de error
                 return ResponseHelper<PaginationResponse<Role>>.MakeResponseFail(ex);
             }
         }
