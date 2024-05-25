@@ -6,21 +6,21 @@ using AspNetCoreHero.ToastNotification.Abstractions;
 using HardwareStore.Services;
 using HardwareStore.Core.Pagination;
 
-namespace HardwareStore.Controllers 
+namespace HardwareStore.Controllers
 {
-    public class RolesController : Controller 
+    public class RolesController : Controller
     {
-        private IRolesService _rolesService; 
-<<<<<<< HEAD
+        private IRolesService _rolesService;
+
         private readonly INotyfService _noty;
-=======
+
         private readonly INotyfService _notify; 
->>>>>>> aec3ee100f0d77a596c0ce8a1f5dd2cfcc2f1ecb
+
 
         public RolesController(IRolesService rolesService, INotyfService noty)
         {
             _rolesService = rolesService;
-            _notify = noty; 
+            _notify = noty;
         }
 
         [HttpGet]
@@ -38,11 +38,10 @@ namespace HardwareStore.Controllers
                 };
                 Response<PaginationResponse<Role>> response = await _rolesService.GetListAsync(paginationRequest);
 
-<<<<<<< HEAD
-            Response<PaginationResponse<Role>> response = await _rolesService.GetListAsync(paginationRequest);
 
-            return View(response.Result);
-=======
+
+                return View(response.Result);
+
                 if (response != null && response.IsSuccess && response.Result != null)
                 {
                     return View(response.Result);
@@ -58,47 +57,66 @@ namespace HardwareStore.Controllers
                 _notify.Error("Ocurrió un error al obtener la lista de roles: " + ex.Message);
                 return View(new PaginationResponse<Role>());
             }
->>>>>>> aec3ee100f0d77a596c0ce8a1f5dd2cfcc2f1ecb
-        }
+
+            }
 
         //  para mostrar el formulario de creación de rol.
         [HttpGet]
-        //[CustomAuthorize(permission: "createRoles", module: "Roles")]
-        public async Task<IActionResult> Create()
-        {
-           
-            Response<IEnumerable<Permission>> response = await _rolesService.GetPermissionsAsync();
-
-            if (!response.IsSuccess)
+            //[CustomAuthorize(permission: "createRoles", module: "Roles")]
+            public async Task<IActionResult> Create()
             {
-                _notify.Error(response.Message);
-                return RedirectToAction(nameof(Index));
+
+                Response<IEnumerable<Permission>> response = await _rolesService.GetPermissionsAsync();
+
+                if (!response.IsSuccess)
+                {
+                    _notify.Error(response.Message);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                // Crea un DTO para el formulario de creación de rol.
+                RoleDTO dto = new RoleDTO
+                {
+                    Permissions = response.Result.Select(p => new PermissionForDTO
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Description = p.Description,
+                        Module = p.Module,
+                    }).ToList()
+                };
+                return View(dto);
             }
 
-            // Crea un DTO para el formulario de creación de rol.
-            RoleDTO dto = new RoleDTO
+            [HttpPost]
+            //[CustomAuthorize(permission: "createRoles", module: "Roles")]
+            public async Task<IActionResult> Create(RoleDTO dto)
             {
-                Permissions = response.Result.Select(p => new PermissionForDTO
+                Response<IEnumerable<Permission>> permissionsResponse = await _rolesService.GetPermissionsAsync();
+
+                if (!ModelState.IsValid)
                 {
-                    Id = p.Id,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Module = p.Module,
-                }).ToList()
-            };
-            return View(dto); 
-        }
+                    _notify.Error("Debe ajustar los errores de validación.");
 
-        [HttpPost]
-        //[CustomAuthorize(permission: "createRoles", module: "Roles")]
-        public async Task<IActionResult> Create(RoleDTO dto)
-        {
-            Response<IEnumerable<Permission>> permissionsResponse = await _rolesService.GetPermissionsAsync();
+                    dto.Permissions = permissionsResponse.Result.Select(p => new PermissionForDTO
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        Description = p.Description,
+                        Module = p.Module,
+                    }).ToList();
 
-            if (!ModelState.IsValid)
-            {
-                _notify.Error("Debe ajustar los errores de validación.");
+                    return View(dto);
+                }
+                Response<Role> createResponse = await _rolesService.CreateAsync(dto);
 
+                if (createResponse.IsSuccess)
+                {
+                    _notify.Success(createResponse.Message);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                _notify.Error(createResponse.Message);
                 dto.Permissions = permissionsResponse.Result.Select(p => new PermissionForDTO
                 {
                     Id = p.Id,
@@ -109,94 +127,74 @@ namespace HardwareStore.Controllers
 
                 return View(dto);
             }
-            Response<Role> createResponse = await _rolesService.CreateAsync(dto);
 
-            if (createResponse.IsSuccess)
+            //  para mostrar el formulario de edición de rol.
+            [HttpGet]
+            //[CustomAuthorize(permission: "updateRoles", module: "Roles")]
+            public async Task<IActionResult> Edit(int id)
             {
-                _notify.Success(createResponse.Message);
-                return RedirectToAction(nameof(Index));
+
+                Response<RoleDTO> response = await _rolesService.GetOneAsync(id);
+
+                if (!response.IsSuccess)
+                {
+                    _notify.Error(response.Message);
+                    return RedirectToAction(nameof(Index));
+                }
+
+                return View(response.Result);
             }
 
-            _notify.Error(createResponse.Message);
-            dto.Permissions = permissionsResponse.Result.Select(p => new PermissionForDTO
+
+            [HttpPost]
+            //[CustomAuthorize(permission: "updateRoles", module: "Roles")]
+            public async Task<IActionResult> Edit(RoleDTO dto)
             {
-                Id = p.Id,
-                Name = p.Name,
-                Description = p.Description,
-                Module = p.Module,
-            }).ToList();
+                if (!ModelState.IsValid)
+                {
+                    _notify.Error("Debe ajustar los errores de validación.");
 
-            return View(dto);
-        }
+                    // Obtiene los permisos del rol para mostrarlos en el formulario.
+                    Response<IEnumerable<PermissionForDTO>> res = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
+                    dto.Permissions = res.Result.ToList();
 
-        //  para mostrar el formulario de edición de rol.
-        [HttpGet]
-        //[CustomAuthorize(permission: "updateRoles", module: "Roles")]
-        public async Task<IActionResult> Edit(int id)
-        {
-           
-            Response<RoleDTO> response = await _rolesService.GetOneAsync(id);
+                    return View(dto);
+                }
 
-            if (!response.IsSuccess)
-            {
-                _notify.Error(response.Message);
-                return RedirectToAction(nameof(Index));
-            }
+                Response<Role> response = await _rolesService.EditAsync(dto);
 
-            return View(response.Result); 
-        }
+                if (response.IsSuccess)
+                {
+                    _notify.Success(response.Message);
+                    return RedirectToAction(nameof(Index));
+                }
 
+                _noty.Error(response.Errors.First());
 
-        [HttpPost]
-        //[CustomAuthorize(permission: "updateRoles", module: "Roles")]
-        public async Task<IActionResult> Edit(RoleDTO dto)
-        {
-            if (!ModelState.IsValid)
-            {
-                _notify.Error("Debe ajustar los errores de validación.");
+            _notify.Error(response.Errors.First());
+            // obtiene los permisos del rol
 
-                // Obtiene los permisos del rol para mostrarlos en el formulario.
-                Response<IEnumerable<PermissionForDTO>> res = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
-                dto.Permissions = res.Result.ToList();
-
+                Response<IEnumerable<PermissionForDTO>> res2 = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
+                dto.Permissions = res2.Result.ToList();
                 return View(dto);
             }
 
-            Response<Role> response = await _rolesService.EditAsync(dto);
-
-            if (response.IsSuccess)
+            [HttpPost]
+            //[CustomAuthorize("deleteRoles", "Roles")]
+            public async Task<IActionResult> Delete(int id)
             {
+                // Elimina el rol 
+                Response<object> response = await _rolesService.DeleteAsync(id);
+
+                if (!response.IsSuccess)
+                {
+                    _notify.Error(response.Message);
+                    return RedirectToAction(nameof(Index));
+                }
+
                 _notify.Success(response.Message);
                 return RedirectToAction(nameof(Index));
             }
-
-<<<<<<< HEAD
-            _noty.Error(response.Errors.First());
-           
-=======
-            _notify.Error(response.Errors.First());
-            // obtiene los permisos del rol
->>>>>>> aec3ee100f0d77a596c0ce8a1f5dd2cfcc2f1ecb
-            Response<IEnumerable<PermissionForDTO>> res2 = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
-            dto.Permissions = res2.Result.ToList();
-            return View(dto);
-        }
-
-        [HttpPost]
-        //[CustomAuthorize("deleteRoles", "Roles")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            // Elimina el rol 
-            Response<object> response = await _rolesService.DeleteAsync(id);
-
-            if (!response.IsSuccess)
-            {
-                _notify.Error(response.Message);
-                return RedirectToAction(nameof(Index));
-            }
-
-            _notify.Success(response.Message);
-            return RedirectToAction(nameof(Index));
         }
     }
-}
+
