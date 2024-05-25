@@ -35,18 +35,6 @@ builder.Services.AddIdentity<User, IdentityRole>(x =>
  .AddDefaultTokenProviders();
 
 
-
-builder.Services.Configure<IdentityOptions>(options =>
-{
-    options.Password.RequireDigit = true;
-    options.Password.RequiredLength = 8;
-    options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequireUppercase = true;
-    options.Password.RequireLowercase = true;
-    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-    options.Lockout.MaxFailedAccessAttempts = 5;
-});
-
 // Agregar servicios adicionales
 builder.Services.AddScoped<IProductServices, ProductService>();
 builder.Services.AddScoped<IEmployeeServices, EmployeeService>();
@@ -66,15 +54,21 @@ builder.Services.AddNotyf(config =>
 
 builder.Services.AddTransient<SeedDb>();
 
-builder.Services.AddRazorPages();
+
 
 
 
 var app = builder.Build();
 
+
+
+
+
+
 // Configurar el pipeline de solicitudes HTTP.
 if (!app.Environment.IsDevelopment())
 {
+
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
@@ -89,7 +83,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
-app.MapRazorPages();
+
 
 SeedData(app);
 

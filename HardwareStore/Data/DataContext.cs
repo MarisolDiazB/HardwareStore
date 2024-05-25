@@ -36,6 +36,11 @@ namespace HardwareStore.Data // Define el espacio de nombres y declara la clase 
         {
             base.OnModelCreating(modelBuilder); // Llama al método base de OnModelCreating.
 
+            // Users
+            modelBuilder.Entity<User>()
+                        .HasIndex(s => s.Document)
+                        .IsUnique();
+
             // Configura la clave principal compuesta de RolePermission.
             modelBuilder.Entity<RolePermission>()
                 .HasKey(rp => new { rp.RoleId, rp.PermissionId });
