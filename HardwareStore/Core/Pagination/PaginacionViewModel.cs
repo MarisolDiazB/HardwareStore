@@ -1,20 +1,20 @@
-﻿using HardwareStore.Data.Entities; // Importa el espacio de nombres para las entidades de datos.
+﻿using HardwareStore.Data.Entities; 
 
-namespace HardwareStore.Core.Pagination // Define el espacio de nombres y declara las clases PaginacionViewModel y Customers.
+namespace HardwareStore.Core.Pagination 
 {
-    public class PaginacionViewModel // Declara la clase PaginacionViewModel.
+    public class PaginacionViewModel 
     {
-        public int PaginaActual { get; set; } // Propiedad para almacenar el número de página actual.
-        public int TotalPaginas { get; set; } // Propiedad para almacenar el número total de páginas.
-        public IEnumerable<Customer> Customers { get; set; } // Colección de clientes para mostrar en la vista.
+        public int PaginaActual { get; set; } 
+        public int TotalPaginas { get; set; } 
+        public IEnumerable<Customer> Customers { get; set; } 
     }
 
-    public class Customers // Declara la clase Customers.
+    public class Customers 
     {
-        public int Id { get; set; } // Propiedad para el identificador del cliente.
-        public string FirstName { get; set; } // Propiedad para el nombre del cliente.
-        public string LastName { get; set; } // Propiedad para el apellido del cliente.
-        public string Customeraddress { get; set; } // Propiedad para la dirección del cliente.
-        public string Phone { get; set; } // Propiedad para el número de teléfono del cliente.
+        public int Id { get; set; } 
+        public string FirstName { get; set; } 
+        public string LastName { get; set; } 
+        public string Customeraddress { get; set; } 
+        public string Phone { get; set; } 
     }
 }

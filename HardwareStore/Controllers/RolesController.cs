@@ -11,9 +11,8 @@ namespace HardwareStore.Controllers
     public class RolesController : Controller 
     {
         private IRolesService _rolesService; 
-        private readonly INotyfService _noty; 
+        private readonly INotyfService _noty;
 
-        // Constructor de la clase RolesController.
         public RolesController(IRolesService rolesService, INotyfService noty)
         {
             _rolesService = rolesService; 
@@ -35,7 +34,6 @@ namespace HardwareStore.Controllers
                 Filter = Filter,
             };
 
-            // la lista de roles.
             Response<PaginationResponse<Role>> response = await _rolesService.GetListAsync(paginationRequest);
 
             return View(response.Result);
@@ -46,7 +44,7 @@ namespace HardwareStore.Controllers
         //[CustomAuthorize(permission: "createRoles", module: "Roles")]
         public async Task<IActionResult> Create()
         {
-            // la lista de permisos
+           
             Response<IEnumerable<Permission>> response = await _rolesService.GetPermissionsAsync();
 
             if (!response.IsSuccess)
@@ -73,7 +71,6 @@ namespace HardwareStore.Controllers
         //[CustomAuthorize(permission: "createRoles", module: "Roles")]
         public async Task<IActionResult> Create(RoleDTO dto)
         {
-            //  la lista de permisos
             Response<IEnumerable<Permission>> permissionsResponse = await _rolesService.GetPermissionsAsync();
 
             if (!ModelState.IsValid)
@@ -115,7 +112,7 @@ namespace HardwareStore.Controllers
         //[CustomAuthorize(permission: "updateRoles", module: "Roles")]
         public async Task<IActionResult> Edit(int id)
         {
-            //  la información del rol para edición
+           
             Response<RoleDTO> response = await _rolesService.GetOneAsync(id);
 
             if (!response.IsSuccess)
@@ -152,7 +149,7 @@ namespace HardwareStore.Controllers
             }
 
             _noty.Error(response.Errors.First());
-            // obtiene los permisos del rol
+           
             Response<IEnumerable<PermissionForDTO>> res2 = await _rolesService.GetPermissionsByRoleAsync(dto.Id);
             dto.Permissions = res2.Result.ToList();
             return View(dto);

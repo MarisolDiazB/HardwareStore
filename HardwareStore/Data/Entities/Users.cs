@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity; // Importa el espacio de nombres para la funcionalidad de Identity.
-using System.ComponentModel.DataAnnotations; // Importa el espacio de nombres para atributos de validación.
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations; 
 
-namespace HardwareStore.Data.Entities // Define el espacio de nombres y declara la clase User.
+namespace HardwareStore.Data.Entities 
 {
-    public class User : IdentityUser // Declara la clase User, que hereda de IdentityUser proporcionada por ASP.NET Core Identity.
+    public class User : IdentityUser 
     {
         [Display(Name = "Documento")]
         [MaxLength(32, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]

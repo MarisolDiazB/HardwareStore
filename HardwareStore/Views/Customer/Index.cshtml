@@ -54,23 +54,6 @@
                 </tbody>
             </table>
         }
-<<<<<<< HEAD
-    </tbody>
-</table>
-
-<div>
-    @if (Model.PaginaActual > 1)//CAMBIAR INGLES
-    {
-        <a href="@Url.Action("Index", new { pageNumber = Model.PaginaActual - 1 })">Anterior</a>
-    }
-
-    Página @Model.PaginaActual de @Model.TotalPaginas
-
-    @if (Model.PaginaActual < Model.TotalPaginas)
-    {
-        <a href="@Url.Action("Index", new { pageNumber = Model.PaginaActual + 1 })">Siguiente</a>
-    }
-=======
         else
         {
             <div class="alert alert-danger" role="alert">
@@ -135,7 +118,6 @@
                 </li>
             </ul>
     </div>
->>>>>>> 7bd0cc833889ba4d31d2be7feec5cb64a03a81f9
 </div>
 
 <button class="btn btn-outline-secondary" type="button" onclick="window.location.href='/Home/Index'">Volver</button>

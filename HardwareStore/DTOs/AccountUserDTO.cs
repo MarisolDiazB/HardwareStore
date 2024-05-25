@@ -26,5 +26,16 @@ namespace HardwareStore.DTOs
         public string PhoneNumber { get; set; } = null!;
 
         public string Email { get; set; }
+
+        [Display(Name = "Tipo de Usuario")]
+        [Required(ErrorMessage = "El campo {0} es obligatorio.")]
+        public UserType UserType { get; set; }
+
+    }
+
+    public enum UserType
+    {
+        Customer,
+        Employee
     }
 }

@@ -1,13 +1,4 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions; // importa la interfaz para el servicio de notificaciones.
-<<<<<<< HEAD
-using HardwareStore.Core.Pagination; 
-using HardwareStore.Data.Entities; 
-using HardwareStore.Services; 
-using Microsoft.AspNetCore.Mvc;
-using PrivateBlog.Web.DTOs; // importa el espacio de nombres de ASP.NET Core para MVC.
-
-namespace HardwareStore.Controllers 
-=======
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using HardwareStore.Data.Entities;
 using HardwareStore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -15,19 +6,12 @@ using HardwareStore.Core.Pagination;
 using HardwareStore.Helpers;
 using HardwareStore.Core;
 namespace HardwareStore.Controllers
->>>>>>> 7bd0cc833889ba4d31d2be7feec5cb64a03a81f9
 {
     public class CustomerController : Controller
     {
-<<<<<<< HEAD
-        private readonly ICustomerService _services; 
-        private readonly INotyfService _notify; 
-        private const int PageSize = 5; 
-=======
         private readonly ICustomerService _services;
         private readonly ICombosHelper _combosHelper;
         private readonly INotyfService _notify;
->>>>>>> 7bd0cc833889ba4d31d2be7feec5cb64a03a81f9
 
         // Constructor de la clase CustomerController.
         public CustomerController(ICustomerService customerService, INotyfService notify, ICombosHelper combosHelper)
@@ -69,35 +53,7 @@ namespace HardwareStore.Controllers
             }
         }
 
-<<<<<<< HEAD
-        [HttpPost]
-        public async Task<IActionResult> Login(LoginDTO dto)
-        {
-            if (ModelState.IsValid)
-            {
-                Microsoft.AspNetCore.Identity.SignInResult result = await _services.LoginAsync(dto);
-                if (result.Succeeded)
-                {
-                    if (Request.Query.Keys.Contains("ReturnUrl"))
-                    {
-                        return Redirect(Request.Query["ReturnUrl"].First());
-                    }
-
-                    return RedirectToAction("Dashboard", "Home");
-                }
-
-                ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos");
-                _notify.Error("Email o contraseña incorrectos");
-            }
-
-            return View(dto);
-        }
-
-
-        // para mostrar el formulario de creación de cliente.
-=======
         // Para mostrar el formulario de creación de cliente.
->>>>>>> 7bd0cc833889ba4d31d2be7feec5cb64a03a81f9
         [HttpGet]
         public async Task<IActionResult> Create()
         {
@@ -111,7 +67,6 @@ namespace HardwareStore.Controllers
         {
             try
             {
-                // Valida el modelo.
                 if (!ModelState.IsValid)
                 {
                     _notify.Error("Debe ajustar los errores de validación.");
@@ -119,10 +74,8 @@ namespace HardwareStore.Controllers
                     return View(model);
                 }
 
-                // Crea el cliente de forma asincrónica.
                 var response = await _services.CreateAsync(model);
 
-                // Maneja la respuesta del servicio.
                 if (response.IsSuccess)
                 {
                     _notify.Success(response.Message);
@@ -130,13 +83,13 @@ namespace HardwareStore.Controllers
                 }
 
                 _notify.Error(response.Message);
-                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
+                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees();
                 return View(model);
             }
             catch (Exception ex)
             {
                 _notify.Error(ex.Message);
-                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
+                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); 
                 return View(model);
             }
         }
@@ -166,17 +119,15 @@ namespace HardwareStore.Controllers
         {
             try
             {
-                // Valida el modelo.
                 if (!ModelState.IsValid)
                 {
                     _notify.Error("Debe ajustar los errores de validación.");
-                    ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
+                    ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); 
                     return View(model);
                 }
 
                 model.Id = id;
 
-                // Edita el cliente de forma asincrónica.
                 var response = await _services.EditAsync(model);
 
                 if (response.IsSuccess)
@@ -186,13 +137,13 @@ namespace HardwareStore.Controllers
                 }
 
                 _notify.Error(response.Message);
-                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
+                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); 
                 return View(model);
             }
             catch (Exception ex)
             {
                 _notify.Error(ex.Message);
-                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees(); // Recargar lista en caso de error
+                ViewBag.EmployeeList = await _combosHelper.GetComboEmployees();
                 return View(model);
             }
         }
@@ -203,7 +154,6 @@ namespace HardwareStore.Controllers
         {
             try
             {
-                // Elimina el cliente de forma asincrónica.
                 var response = await _services.DeleteAsync(id);
 
                 if (response.IsSuccess)

@@ -38,7 +38,7 @@ namespace HardwareStore.Data.Seeders
         private async Task CheckUsers()
         {
             // Administrador
-            User? user = await _usersService.GetUserAsync("manueld@yopmail.com");
+            User? user = await _usersService.GetUserAsync("andresP@yopmail.com");
 
             Role adminRole = _context.Roles.Where(r => r.Name == "Administrador")
                                                                  .First();
@@ -47,12 +47,12 @@ namespace HardwareStore.Data.Seeders
             {
                 user = new User
                 {
-                    Email = "manueld@yopmail.com",
-                    FirstName = "Manuel Alejandro",
-                    LastName = "Domínguez Guerrero",
-                    PhoneNumber = "3000000000",
-                    UserName = "manueld@yopmail.com",
-                    Document = "1111",
+                    Email = "andresP@yopmail.com",
+                    FirstName = "Andres",
+                    LastName = "Paredes",
+                    PhoneNumber = "3005192855",
+                    UserName = "andresP@yopmail.com",
+                    Document = "2222",
                     Role = adminRole,
                 };
 
@@ -89,7 +89,7 @@ namespace HardwareStore.Data.Seeders
             }
 
             // Gestor de usuarios
-            user = await _usersService.GetUserAsync("jhond@yopmail.com");
+            user = await _usersService.GetUserAsync("juand@yopmail.com");
 
             Role gestorDeUsuarios = await _context.Roles.Where(pbr => pbr.Name == "Gestor de usuarios")
                                                                               .FirstAsync();
@@ -98,12 +98,12 @@ namespace HardwareStore.Data.Seeders
             {
                 user = new User
                 {
-                    Email = "jhond@yopmail.com",
-                    FirstName = "Jhon",
-                    LastName = "Doe",
-                    PhoneNumber = "30000000",
-                    UserName = "jhond@yopmail.com",
-                    Document = "3333",
+                    Email = "juand@yopmail.com",
+                    FirstName = "Juan",
+                    LastName = "Diaz",
+                    PhoneNumber = "32006547",
+                    UserName = "juand@yopmail.com",
+                    Document = "4444",
                     Role = gestorDeUsuarios
                 };
 

@@ -8,7 +8,6 @@ namespace HardwareStore.Controllers
     {
         private readonly ILogger<HomeController> _logger; 
 
-        // Constructor de la clase HomeController.
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger; 
@@ -17,7 +16,7 @@ namespace HardwareStore.Controllers
         // para mostrar la vista de inicio.
         public IActionResult Index()
         {
-            return View(); // Devuelve la vista de inicio.
+            return View(); 
         }
 
         // para mostrar la vista de privacidad.

@@ -1,30 +1,30 @@
-﻿namespace HardwareStore.Core.Middlewares // Define el espacio de nombres y declara la clase HttpCustomMethodOverrideMiddleware.
+﻿namespace HardwareStore.Core.Middlewares 
 {
-    public class HttpCustomMethodOverrideMiddleware // Declara la clase HttpCustomMethodOverrideMiddleware.
+    public class HttpCustomMethodOverrideMiddleware 
     {
-        private readonly RequestDelegate _next; // Declara una variable para almacenar la referencia al siguiente delegado de solicitud.
+        private readonly RequestDelegate _next; 
 
-        public HttpCustomMethodOverrideMiddleware(RequestDelegate next) // Constructor de la clase HttpCustomMethodOverrideMiddleware.
+        public HttpCustomMethodOverrideMiddleware(RequestDelegate next) 
         {
-            _next = next; // Inicializa la variable para almacenar la referencia al siguiente delegado de solicitud.
+            _next = next; 
         }
 
-        public async Task Invoke(HttpContext context) // Método Invoke que procesa la solicitud HTTP.
+        public async Task Invoke(HttpContext context) 
         {
-            if (context.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase) // Verifica si la solicitud es POST.
-                && context.Request.HasFormContentType) // Verifica si la solicitud tiene contenido de formulario.
+            if (context.Request.Method.Equals("POST", StringComparison.OrdinalIgnoreCase) 
+                && context.Request.HasFormContentType) 
             {
-                IFormCollection form = await context.Request.ReadFormAsync(); // Lee el contenido del formulario de la solicitud.
-                string? method = form["_method"].FirstOrDefault(); // Obtiene el valor del campo "_method" del formulario, si existe.
+                IFormCollection form = await context.Request.ReadFormAsync(); 
+                string? method = form["_method"].FirstOrDefault(); 
 
-                if (!string.IsNullOrEmpty(method)) // Verifica si se ha especificado un método personalizado.
+                if (!string.IsNullOrEmpty(method)) 
                 {
-                    // Convertir el método a mayúsculas y establecerlo en la solicitud.
+                    
                     context.Request.Method = method.ToUpperInvariant();
                 }
             }
 
-            await _next(context); // Pasa la solicitud al siguiente delegado en la cadena de middleware.
+            await _next(context); 
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using AspNetCoreHero.ToastNotification.Abstractions; // importa la interfaz para el servicio de notificaciones.
+﻿using AspNetCoreHero.ToastNotification.Abstractions; 
 using HardwareStore.Data.Entities;
 using HardwareStore.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +14,7 @@ namespace HardwareStore.Controllers
         private readonly ICombosHelper _combosHelper;
         private readonly INotyfService _notify;
 
-        // Constructor de la clase EmployeeController.
+      
         public EmployeeController(IEmployeeServices employeeServices, INotyfService notify, ICombosHelper combosHelper)
         {
             _services = employeeServices; 
@@ -59,7 +59,7 @@ namespace HardwareStore.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View(); // Devuelve la vista para crear un nuevo empleado.
+            return View(); 
         }
 
         // para procesar el formulario de creación de empleado.
