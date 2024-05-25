@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using HardwareStore.Core.Pagination;
 using HardwareStore.Helpers;
 using HardwareStore.Core;
+using HardwareStore.Core.Attributes;
 namespace HardwareStore.Controllers
 {
     public class CustomerController : Controller
@@ -22,6 +23,7 @@ namespace HardwareStore.Controllers
         }
 
         [HttpGet]
+        //[CustomAuthorize(permission: "showCustomer", module: "Customer")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
                                        [FromQuery] int? Page,
                                        [FromQuery] string? Filter)
@@ -55,6 +57,7 @@ namespace HardwareStore.Controllers
 
         // Para mostrar el formulario de creación de cliente.
         [HttpGet]
+        //[CustomAuthorize(permission: "createCustomer", module: "Customer")]
         public async Task<IActionResult> Create()
         {
             ViewBag.EmployeeList = await _combosHelper.GetComboEmployees();
@@ -63,6 +66,7 @@ namespace HardwareStore.Controllers
 
         // Para procesar la creación de un cliente.
         [HttpPost]
+        //[CustomAuthorize(permission: "showCustomer", module: "Customer")]
         public async Task<IActionResult> Create(Customer model)
         {
             try
@@ -96,6 +100,7 @@ namespace HardwareStore.Controllers
 
         // Para mostrar el formulario de edición de cliente.
         [HttpGet]
+        //[CustomAuthorize(permission: "updateCustomer", module: "Customer")]
         public async Task<IActionResult> Edit(int id)
         {
             var response = await _services.GetOneAsync(id);
@@ -115,6 +120,7 @@ namespace HardwareStore.Controllers
 
         // Para procesar la edición de un cliente.
         [HttpPost]
+        //[CustomAuthorize(permission: "updateCustomer", module: "Customer")]
         public async Task<IActionResult> Edit(int id, Customer model)
         {
             try
@@ -150,6 +156,7 @@ namespace HardwareStore.Controllers
 
         // Para eliminar un cliente.
         [HttpPost]
+        //[CustomAuthorize(permission: "deleteCustomer", module: "Customer")]
         public async Task<IActionResult> Delete(int id)
         {
             try

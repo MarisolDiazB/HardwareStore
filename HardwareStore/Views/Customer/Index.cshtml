@@ -1,11 +1,18 @@
 ﻿@model PaginationResponse<HardwareStore.Data.Entities.Customer>
+@inject HardwareStore.Services.IUsersService _usersService
+
 @{
     ViewData["Title"] = "Clientes";
 }
 
 <div class="card-body mt-2">
     <h2>Lista de Clientes</h2>
-    <button class="btn btn-primary" onclick="window.location.href='/Customer/Create'">Crear Cliente</button>
+    @if (await _usersService.CurrentUserIsAuthorizedAsync("createSections", "Secciones"))
+    {
+        <div class="col-md-1">
+            <a asp-action="Create" class="btn btn-primary"><i class="bi bi-plus-circle"></i></a>
+        </div>
+    }
 
     <div class="card-body mt-2">
         <form class="navbar-search" asp-action="Index" method="GET">
@@ -42,13 +49,21 @@
                             <td> @Html.DisplayFor(modelItem => item.LastName) </td>
                             <td> @Html.DisplayFor(modelItem => item.Customeraddress) </td>
                             <td> @Html.DisplayFor(modelItem => item.Phone)</td>
-                            <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                                <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
-                                    <input type="hidden" name="id" value="@item.Id" />
-                                    <button type="submit">Eliminar</button>
-                                </form>
-                            </td>
+                           <td>
+    @if (await _usersService.CurrentUserIsAuthorizedAsync("updateCustomer", "Customer"))
+    {
+        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning"><i class="bi bi-pencil-fill"></i></a>
+
+     
+    }
+
+    @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteCustomer", "Customer"))
+    {
+        <form asp-action="Delete" asp-route-id="@item.Id" style="display:contents">
+            <button class="btn btn-danger btn-sm btnDelete"><i class="bi bi-trash-fill"></i></button>
+        </form>
+    }
+</td>
                         </tr>
                     }
                 </tbody>

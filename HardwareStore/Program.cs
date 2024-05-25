@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using static HardwareStore.Services.IEmployeeServices;
 using static HardwareStore.Services.IProductServices;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Agregar servicios al contenedor.
@@ -19,7 +18,14 @@ builder.Services.AddControllersWithViews();
 
 // Contexto de datos
 builder.Services.AddDbContext<DataContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MyConnection"), sqlServerOptions =>
+    {
+        sqlServerOptions.EnableRetryOnFailure(
+            maxRetryCount: 3, // Menor cantidad de reintentos
+            maxRetryDelay: TimeSpan.FromSeconds(5), // Menor retraso entre reintentos
+            errorNumbersToAdd: null
+        );
+    }));
 
 builder.Services.AddIdentity<User, IdentityRole>(x =>
 {
@@ -31,9 +37,8 @@ builder.Services.AddIdentity<User, IdentityRole>(x =>
     x.Password.RequireNonAlphanumeric = false;
     x.Password.RequiredLength = 4;
 })
- .AddEntityFrameworkStores<DataContext>()
- .AddDefaultTokenProviders();
-
+.AddEntityFrameworkStores<DataContext>()
+.AddDefaultTokenProviders();
 
 // Agregar servicios adicionales
 builder.Services.AddScoped<IProductServices, ProductService>();
@@ -54,21 +59,11 @@ builder.Services.AddNotyf(config =>
 
 builder.Services.AddTransient<SeedDb>();
 
-
-
-
-
 var app = builder.Build();
-
-
-
-
-
 
 // Configurar el pipeline de solicitudes HTTP.
 if (!app.Environment.IsDevelopment())
 {
-
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
@@ -83,8 +78,6 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Account}/{action=Login}/{id?}");
 
-
-
 SeedData(app);
 
 app.Run();
@@ -94,5 +87,12 @@ void SeedData(WebApplication app)
     using var scope = app.Services.CreateScope();
     var services = scope.ServiceProvider;
     var seedService = services.GetRequiredService<SeedDb>();
-    seedService.SeedAsync().Wait();
+    try
+    {
+        seedService.SeedAsync().Wait();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine("Seeding error: " + ex.Message);
+    }
 }
