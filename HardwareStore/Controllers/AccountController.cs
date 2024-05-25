@@ -1,76 +1,148 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using HardwareStore.Models;
+﻿using AspNetCoreHero.ToastNotification.Abstractions;
 using HardwareStore.Data.Entities;
-using System.Threading.Tasks;
+using HardwareStore.DTOs;
+using HardwareStore.Helpers;
+using HardwareStore.Models;
+using HardwareStore.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
-public class AccountController : Controller
+
+namespace HardwareStore.Controllers
 {
-    private readonly UserManager<User> _userManager;
-    private readonly SignInManager<User> _signInManager;
-
-    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+    public class AccountController : Controller
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-    }
+        private readonly IConverterHelper _converterHelper;
+        private readonly INotyfService _noty;
+        private readonly IUsersService _usersService;
 
-    [HttpGet]
-    public IActionResult Login()
-    {
-        return View(new LoginViewModel());
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Login(LoginViewModel model)
-    {
-        if (ModelState.IsValid)
+        public AccountController(IUsersService usersService, INotyfService noty, IConverterHelper converterHelper)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, lockoutOnFailure: false);
-
-            if (result.Succeeded)
-            {
-                return RedirectToAction("Index", "Home");
-            }
-
-            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-            return View(model);
+            _usersService = usersService;
+            _noty = noty;
+            _converterHelper = converterHelper;
         }
 
-        return View(model);
-    }
-
-    [HttpGet]
-    public IActionResult Register()
-    {
-        return View();
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Register(RegisterViewModel model)
-    {
-        if (ModelState.IsValid)
+        [HttpGet]
+        public IActionResult Login()
         {
-            var user = new User { UserName = model.Email, Email = model.Email };
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-            if (result.Succeeded)
-            {
-                await _signInManager.SignInAsync(user, isPersistent: false);
-                return RedirectToAction("Index", "Home");
-            }
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error.Description);
-            }
+            return View();
         }
-        return View(model);
-    }
 
-    [HttpPost]
-    public async Task<IActionResult> Logout()
-    {
-        await _signInManager.SignOutAsync();
-        return RedirectToAction("Index", "Home");
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel dto)
+        {
+            if (ModelState.IsValid)
+            {
+                Microsoft.AspNetCore.Identity.SignInResult result = await _usersService.LoginAsync(dto);
+                if (result.Succeeded)
+                {
+                    if (Request.Query.Keys.Contains("ReturnUrl"))
+                    {
+                        return Redirect(Request.Query["ReturnUrl"].First());
+                    }
+
+                    return RedirectToAction("Dashboard", "Home");
+                }
+
+                ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos");
+                _noty.Error("Email o contraseña incorrectos");
+            }
+
+            return View(dto);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Logout()
+        {
+            await _usersService.LogoutAsync();
+            return RedirectToAction("Login");
+        }
+
+        [HttpGet]
+        public IActionResult NotAuthorized()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UpdateUser()
+        {
+            User? user = await _usersService.GetUserAsync(User.Identity.Name);
+
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            AccountUserDTO dto = _converterHelper.ToAccountDTO(user);
+
+            return View(dto);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> UpdateUser(AccountUserDTO dto)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await _usersService.GetUserAsync(User.Identity.Name);
+
+                user.Document = dto.Document;
+                user.FirstName = dto.FirstName;
+                user.LastName = dto.LastName;
+                user.PhoneNumber = dto.PhoneNumber;
+
+                await _usersService.UpdateUserAsync(user);
+
+                _noty.Success("Usuario editado con éxito");
+
+                return RedirectToAction("Dashboard", "Home");
+            }
+
+            _noty.Error("Debe ajustar los errores de validación.");
+            return View(dto);
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDTO dto)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await _usersService.GetUserAsync(User.Identity.Name);
+
+                bool isCorrectPassword = await _usersService.CheckPasswordAsync(user, dto.CurrentPassword);
+
+                if (!isCorrectPassword)
+                {
+                    _noty.Error("Contraseña incorrecta");
+                    return View();
+                }
+
+                string restToken = await _usersService.GeneratePasswordResetTokenAsync(user);
+                IdentityResult result = await _usersService.ResetPasswordAsync(user, restToken, dto.NewPassword);
+
+                if (result.Succeeded)
+                {
+                    _noty.Success("Contraseña actualizada con éxito");
+                    return RedirectToAction("Dashboard", "Home");
+                }
+
+                _noty.Error("Ha ocurriso un error, intentole nuevamente");
+                return View();
+            }
+
+            _noty.Error("Debe ajustar los errores de validación");
+            return View();
+        }
     }
 }
