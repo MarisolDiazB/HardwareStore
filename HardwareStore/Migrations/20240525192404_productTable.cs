@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HardwareStore.Migrations
 {
     /// <inheritdoc />
-    public partial class product : Migration
+    public partial class productTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -297,6 +297,12 @@ namespace HardwareStore.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_Document",
+                table: "AspNetUsers",
+                column: "Document",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUsers_RoleId",

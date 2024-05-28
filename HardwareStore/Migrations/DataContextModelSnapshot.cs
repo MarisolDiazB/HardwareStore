@@ -241,6 +241,9 @@ namespace HardwareStore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Document")
+                        .IsUnique();
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 

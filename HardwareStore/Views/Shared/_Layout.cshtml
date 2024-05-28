@@ -30,9 +30,10 @@
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
-                                <form method="post" asp-controller="Account" asp-action="Logout" id="logoutForm">
+                                @* <form method="post" asp-controller="Account" asp-action="Logout" id="logoutForm">
                                     <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-                                </form>
+                                </form> *@
+                                <a  asp-controller="Account" asp-action="Logout">Cerrar sesión</a>
                             </li>
                         }
                         else

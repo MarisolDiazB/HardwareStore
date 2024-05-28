@@ -1,7 +1,8 @@
 ﻿using AspNetCoreHero.ToastNotification.Abstractions; 
 using HardwareStore.Core;
 using HardwareStore.Core.Pagination; 
-using HardwareStore.Data.Entities; 
+using HardwareStore.Data.Entities;
+using HardwareStore.Core.Attributes;
 using HardwareStore.Services; 
 using Microsoft.AspNetCore.Mvc; 
 using System; 
@@ -22,7 +23,7 @@ namespace HardwareStore.Controllers
         }
 
         [HttpGet]
-        //[CustomAuthorize(permission: "showProducts", module: "Products")]
+        [CustomAuthorize(permission: "showProducts", module: "Products")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
                                        [FromQuery] int? Page,
                                        [FromQuery] string? Filter)
@@ -56,7 +57,7 @@ namespace HardwareStore.Controllers
 
         //  para mostrar el formulario de creación de producto.
         [HttpGet]
-        //[CustomAuthorize(permission: "createProducts", module: "Products")]
+        [CustomAuthorize(permission: "createProducts", module: "Products")]
         public IActionResult Create()
         {
             return View(); 
@@ -64,7 +65,7 @@ namespace HardwareStore.Controllers
 
         //  para procesar el formulario de creación de producto.
         [HttpPost]
-        //[CustomAuthorize(permission: "createProducts", module: "Products")]
+        [CustomAuthorize(permission: "createProducts", module: "Products")]
         public async Task<IActionResult> Create(Products model)
         {
             try
@@ -95,7 +96,7 @@ namespace HardwareStore.Controllers
 
         // para mostrar el formulario de edición de producto.
         [HttpGet("{id}")]
-        //[CustomAuthorize(permission: "updateProducts", module: "Products")]
+        [CustomAuthorize(permission: "updateProducts", module: "Products")]
         public async Task<IActionResult> Edit([FromRoute] int id)
         {
             Response<Products> response = await _services.GetOneAsync(id);
@@ -111,7 +112,7 @@ namespace HardwareStore.Controllers
 
         //  para procesar el formulario de edición de producto.
         [HttpPost]
-        //[CustomAuthorize(permission: "updateProducts", module: "Products")]
+        [CustomAuthorize(permission: "updateProducts", module: "Products")]
         public async Task<IActionResult> Update(Products model)
         {
             try
@@ -142,7 +143,7 @@ namespace HardwareStore.Controllers
 
         //  para eliminar un producto.
         [HttpPost("{id}")]
-        //[CustomAuthorize(permission: "deleteProducts", module: "Products")]
+        [CustomAuthorize(permission: "deleteProducts", module: "Products")]
         public async Task<IActionResult> Delete([FromRoute] int id)
         {
             Response<Products> response = await _services.DeleteAsync(id);

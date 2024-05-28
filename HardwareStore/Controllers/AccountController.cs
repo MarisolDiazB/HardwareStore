@@ -43,7 +43,7 @@ namespace HardwareStore.Controllers
                         return Redirect(Request.Query["ReturnUrl"].First());
                     }
 
-                    return RedirectToAction("Dashboard", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 ModelState.AddModelError(string.Empty, "Email o contraseña incorrectos");
@@ -98,7 +98,7 @@ namespace HardwareStore.Controllers
 
                 _noty.Success("Usuario editado con éxito");
 
-                return RedirectToAction("Dashboard", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             _noty.Error("Debe ajustar los errores de validación.");
@@ -134,7 +134,7 @@ namespace HardwareStore.Controllers
                 if (result.Succeeded)
                 {
                     _noty.Success("Contraseña actualizada con éxito");
-                    return RedirectToAction("Dashboard", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 _noty.Error("Ha ocurriso un error, intentole nuevamente");

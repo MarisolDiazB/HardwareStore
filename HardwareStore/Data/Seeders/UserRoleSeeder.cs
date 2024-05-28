@@ -66,7 +66,7 @@ namespace HardwareStore.Data.Seeders
             user = await _usersService.GetUserAsync("anad@yopmail.com");
 
 
-            Role creadorDeContenidoRole = await _context.Roles.Where(pbr => pbr.Name == "Creador de contenido")
+            Role creadorDeContenidoRole = await _context.Roles.Where(pbr => pbr.Name == "Vendedor")
                                                                                     .FirstAsync();
 
             if (user == null)
@@ -114,19 +114,19 @@ namespace HardwareStore.Data.Seeders
             }
         }
 
-        private async Task CreadorDeContenidoRoleAsync()
+        private async Task VendedorAsync()
         {
 
-            Role? tmp = await _context.Roles.Where(pbr => pbr.Name == "Creador de contenido")
+            Role? tmp = await _context.Roles.Where(pbr => pbr.Name == "Vendedor")
                                                                   .FirstOrDefaultAsync();
 
             if (tmp == null)
             {
-                Role role = new Role { Name = "Creador de contenido" };
+                Role role = new Role { Name = "Vendedor" };
 
                 _context.Roles.Add(role);
 
-                List<Permission> permissions = await _context.Permissions.Where(p => p.Module == "Secciones").ToListAsync();
+                List<Permission> permissions = await _context.Permissions.Where(p => p.Module == "Roles").ToListAsync();
 
                 foreach (Permission permission in permissions)
                 {
@@ -164,7 +164,7 @@ namespace HardwareStore.Data.Seeders
         private async Task CheckRolesAsync()
         {
             await AdministradorRoleAsync();
-            await CreadorDeContenidoRoleAsync();
+            await VendedorAsync();
             await GestorDeUsuariosRoleAsync();
         }
     }

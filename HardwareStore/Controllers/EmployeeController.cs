@@ -25,7 +25,7 @@ namespace HardwareStore.Controllers
 
         //para mostrar la lista de empleados.
         [HttpGet]
-        //[CustomAuthorize(permission: "showEmployee", module: "Employee")]
+        [CustomAuthorize(permission: "showEmployee", module: "Employee")]
         public async Task<IActionResult> Index([FromQuery] int? RecordsPerPage,
                                        [FromQuery] int? Page,
                                        [FromQuery] string? Filter)
@@ -59,7 +59,7 @@ namespace HardwareStore.Controllers
 
         //para mostrar el formulario de creación de empleado.
         [HttpGet]
-       // [CustomAuthorize(permission: "createEmployee", module: "Employee")]
+        [CustomAuthorize(permission: "createEmployee", module: "Employee")]
         public IActionResult Create()
         {
             return View(); 
@@ -67,7 +67,7 @@ namespace HardwareStore.Controllers
 
         // para procesar el formulario de creación de empleado.
         [HttpPost]
-        //[CustomAuthorize(permission: "createEmployee", module: "Employee")]
+        [CustomAuthorize(permission: "createEmployee", module: "Employee")]
         public async Task<IActionResult> Create(Employee model)
         {
             try
@@ -100,7 +100,7 @@ namespace HardwareStore.Controllers
 
         //para mostrar el formulario de edición de empleado.
         [HttpGet]
-       // [CustomAuthorize(permission: "updateEmployee", module: "Employee")]
+        [CustomAuthorize(permission: "updateEmployee", module: "Employee")]
         public async Task<IActionResult> Edit(int id)
         {
             var response = await _services.GetOneEmployeeAsync(id);
@@ -116,7 +116,7 @@ namespace HardwareStore.Controllers
 
         //para procesar el formulario de edición de empleado.
         [HttpPost]
-        //[CustomAuthorize(permission: "updateEmployee", module: "Employee")]
+        [CustomAuthorize(permission: "updateEmployee", module: "Employee")]
         public async Task<IActionResult> Edit(int id, Employee model)
         {
             try
