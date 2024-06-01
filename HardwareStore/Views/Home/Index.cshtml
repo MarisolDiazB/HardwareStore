@@ -2,17 +2,141 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Programacion de software</p>
-    <button onclick="window.location.href='/Employee/Index'">Empleados</button>
-    <button onclick="window.location.href='/Products/Index'">Productos</button>
-    <button onclick="window.location.href='/Customer/Index'">Clientes</button>
-    <button onclick="window.location.href='/Roles/Index'">Roles</button>
+<div class="container text-center mt-5">
+    <h1 class="display-4 mb-4">Bienvenido a HardwareStore</h1>
+    <p class="lead mb-5">Su tienda de hardware de confianza</p>
+    <div class="row justify-content-center">
+        <div class="col-lg-3 col-md-6 mb-4 px-3">
+            <div class="card shadow-sm border-primary h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Empleados</h5>
+                    <p class="card-text flex-grow-1">Gestione la información y registros de los empleados.</p>
+                    <button class="btn btn-primary mt-auto custom-btn" onclick="window.location.href='/Employee/Index'">Ir a Empleados</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4 px-3">
+            <div class="card shadow-sm border-success h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Productos</h5>
+                    <p class="card-text flex-grow-1">Ver y gestionar el inventario de productos.</p>
+                    <button class="btn btn-success mt-auto custom-btn" onclick="window.location.href='/Products/Index'">Ir a Productos</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4 px-3">
+            <div class="card shadow-sm border-warning h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Clientes</h5>
+                    <p class="card-text flex-grow-1">Acceda y actualice la información de los clientes.</p>
+                    <button class="btn btn-warning mt-auto custom-btn" onclick="window.location.href='/Customer/Index'">Ir a Clientes</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6 mb-4 px-3">
+            <div class="card shadow-sm border-info h-100">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Roles</h5>
+                    <p class="card-text flex-grow-1">Gestione los roles y permisos de los usuarios.</p>
+                    <button class="btn btn-info mt-auto custom-btn" onclick="window.location.href='/Roles/Index'">Ir a Roles</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<style>
+    body {
+        background-color: #f0f2f5;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .display-4 {
+        color: #007bff;
+        font-weight: bold;
+    }
+
+    .lead {
+        font-size: 1.25rem;
+        color: #333;
+    }
+
+    .card {
+        border-radius: 15px;
+        transition: transform 0.2s;
+    }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+    }
+
+    .card-text {
+        font-size: 1rem;
+    }
+
+    .custom-btn {
+        font-size: 1.1rem;
+        border-radius: 30px;
+        padding: 10px 20px;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+    .btn-primary.custom-btn:hover {
+        background-color: #0056b3;
+        color: #fff;
+    }
+
+    .btn-success.custom-btn:hover {
+        background-color: #28a745;
+        color: #fff;
+    }
+
+    .btn-warning.custom-btn:hover {
+        background-color: #ffc107;
+        color: #fff;
+    }
+
+    .btn-info.custom-btn:hover {
+        background-color: #17a2b8;
+        color: #fff;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .col-lg-3,
+    .col-md-6 {
+        display: flex;
+    }
+
+    .col-lg-3,
+    .col-md-6 {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+
+    .card {
+        width: 100%;
+    }
+</style>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+
+
