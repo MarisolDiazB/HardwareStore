@@ -27,9 +27,9 @@ namespace HardwareStore.DTOs
         [Display(Name = "Rol")]
         [Range(1, int.MaxValue, ErrorMessage = "Debe seleccionar un rol.")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
-        public int PrivateBlogRoleId { get; set; }
+        public int RoleId { get; set; }
 
-        public IEnumerable<SelectListItem>? PrivateBlogRoles { get; set; }
+        public IEnumerable<SelectListItem>? Roles { get; set; }
 
         [Display(Name = "Teléfono")]
         [Required(ErrorMessage = "El campo {0} es obligatorio.")]
