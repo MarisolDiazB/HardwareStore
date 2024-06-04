@@ -53,20 +53,20 @@
                                     <td>@Html.DisplayFor(modelItem => item.Customeraddress)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Phone)</td>
                                     <td>
-                                        <div class="btn-group" role="group">
                                             @if (await _usersService.CurrentUserIsAuthorizedAsync("updateCustomer", "Customer"))
                                             {
-                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
+                                            <a asp-action="Edit" class="btn btn-sm btn-warning" asp-route-id="@item.Id"><i class="bi bi-pencil-fill"></i>Editar</a>
                                             }
+
                                             @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteCustomer", "Customer"))
                                             {
-                                                <button class="btn btn-danger btn-sm btnDelete" type="button" data-id="@item.Id"><i class="bi bi-trash-fill"></i></button>
-                                                <form asp-action="Delete" method="post" class="d-inline deleteForm" data-id="@item.Id">
-                                                    <input type="hidden" name="id" value="@item.Id" />
-                                                </form>
+                                            <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
+                                                <input type="hidden" name="id" value="@item.Id" />
+                                                <button type="submit"><i class="bi bi-trash-fill"></i>Eliminar</button>
+                                            </form>
                                             }
-                                        </div>
                                     </td>
+                                    
                                 </tr>
                             }
                         </tbody>

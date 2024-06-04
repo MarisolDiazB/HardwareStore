@@ -5,9 +5,7 @@ using HardwareStore.Data.Entities;
 using HardwareStore.Core.Attributes;
 using HardwareStore.Services; 
 using Microsoft.AspNetCore.Mvc; 
-using System; 
-using System.Linq;
-using System.Threading.Tasks; 
+
 
 namespace HardwareStore.Controllers 
 {
@@ -95,25 +93,25 @@ namespace HardwareStore.Controllers
         }
 
         // para mostrar el formulario de edición de producto.
-        [HttpGet("{id}")]
+        [HttpGet]
         [CustomAuthorize(permission: "updateProducts", module: "Products")]
-        public async Task<IActionResult> Edit([FromRoute] int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            Response<Products> response = await _services.GetOneAsync(id);
+            var response = await _services.GetOneAsync(id);
 
-            if (response.IsSuccess)
+            if (!response.IsSuccess || response.Result == null)
             {
-                return View(response.Result);
+                _notify.Error("Producto no encontrado.");
+                return RedirectToAction(nameof(Index));
             }
 
-            _notify.Error(response.Errors.First());
-            return RedirectToAction(nameof(Index));
+            return View(response.Result);
         }
 
         //  para procesar el formulario de edición de producto.
         [HttpPost]
         [CustomAuthorize(permission: "updateProducts", module: "Products")]
-        public async Task<IActionResult> Update(Products model)
+        public async Task<IActionResult> Edit(int id, Products model)
         {
             try
             {
@@ -122,16 +120,15 @@ namespace HardwareStore.Controllers
                     _notify.Error("Debe ajustar los errores de validación.");
                     return View(model);
                 }
-
-                Response<Products> response = await _services.EditAsync(model);
-
+                // edita el empleado
+                var response = await _services.EditAsync(model);
                 if (response.IsSuccess)
                 {
                     _notify.Success(response.Message);
                     return RedirectToAction(nameof(Index));
                 }
 
-                _notify.Error(response.Errors.First());
+                _notify.Error(response.Message);
                 return View(model);
             }
             catch (Exception ex)
@@ -142,20 +139,30 @@ namespace HardwareStore.Controllers
         }
 
         //  para eliminar un producto.
-        [HttpPost("{id}")]
+        [HttpPost]
         [CustomAuthorize(permission: "deleteProducts", module: "Products")]
-        public async Task<IActionResult> Delete([FromRoute] int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            Response<Products> response = await _services.DeleteAsync(id);
-
-            if (response.IsSuccess)
+            try
             {
-                _notify.Success(response.Message);
+                var response = await _services.DeleteAsync(id);
+
+                if (response.IsSuccess)
+                {
+                    _notify.Success(response.Message);
+                }
+                else
+                {
+                    _notify.Error(response.Message);
+                }
+
                 return RedirectToAction(nameof(Index));
             }
-
-            _notify.Error(response.Errors.First());
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                _notify.Error(ex.Message);
+                return RedirectToAction(nameof(Index));
+            }
         }
     }
 }

@@ -1,0 +1,11 @@
+﻿@model HardwareStore.DTOs.RoleDTO
+
+<input type="hidden" id="permissionIds" name="PermissionIds" />
+
+<div class="col-md-12">
+    <div class="form-floating">
+        <label>Nombre Rol</label>
+        <input asp-for="Name" class="form-control" placeholder="@Html.DisplayFor(model => model.Name)">
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+</div>

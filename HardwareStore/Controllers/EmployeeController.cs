@@ -150,7 +150,7 @@ namespace HardwareStore.Controllers
 
         // para eliminar un empleado.
         [HttpPost]
-        //[CustomAuthorize(permission: "deleteEmployee", module: "Employee")]
+        [CustomAuthorize(permission: "deleteEmployee", module: "Employee")]
         public async Task<IActionResult> Delete(int id)
         {
             try

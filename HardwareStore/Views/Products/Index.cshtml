@@ -1,5 +1,6 @@
-﻿@model PaginationResponse<HardwareStore.Data.Entities.Products>
-
+﻿
+@model PaginationResponse<HardwareStore.Data.Entities.Products>
+@inject HardwareStore.Services.IUsersService _usersService
 @{
     ViewData["Title"] = "Productos";
 }
@@ -47,13 +48,18 @@
                                     <td>@Html.DisplayFor(modelItem => item.Price)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Stock)</td>
                                     <td>
-                                        <div class="btn-group" role="group">
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
-                                            <button class="btn btn-danger btn-sm btnDelete" type="button" data-id="@item.Id"><i class="bi bi-trash-fill"></i></button>
-                                            <form asp-action="Delete" method="post" class="d-inline deleteForm" data-id="@item.Id">
+                                        @if (await _usersService.CurrentUserIsAuthorizedAsync("updateProducts", "Products"))
+                                        {
+                                            <a asp-action="Edit" class="btn btn-sm btn-warning" asp-route-id="@item.Id"><i class="bi bi-pencil-fill"></i>Editar</a>
+                                        }
+
+                                        @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteProducts", "Products"))
+                                        {
+                                            <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este Producto?');">
                                                 <input type="hidden" name="id" value="@item.Id" />
+                                                <button type="submit"><i class="bi bi-trash-fill"></i>Eliminar</button>
                                             </form>
-                                        </div>
+                                        }
                                     </td>
                                 </tr>
                             }

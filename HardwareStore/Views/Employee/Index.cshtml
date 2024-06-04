@@ -1,4 +1,7 @@
-﻿@model PaginationResponse<HardwareStore.Data.Entities.Employee>
+﻿@using HardwareStore.Core
+@model PaginationResponse<HardwareStore.Data.Entities.Employee>
+
+@inject HardwareStore.Services.IUsersService _usersService
 
 @{
     ViewData["Title"] = "Empleados";
@@ -9,7 +12,12 @@
         <div class="card-body">
             <h2 class="text-center mb-4">@ViewData["Title"]</h2>
             <div class="d-flex justify-content-between mb-3">
-                <button class="btn btn-primary btn-lg" onclick="window.location.href='/Employee/Create'"><i class="bi bi-plus-circle"></i> Nuevo Empleado</button>
+                @if (await _usersService.CurrentUserIsAuthorizedAsync("createEmployee", "Employee"))
+                {
+                    <div class="col-md-1">
+                        <button class="btn btn-primary btn-lg" onclick="window.location.href='/Employee/Create'"><i class="bi bi-plus-circle"></i> Nuevo Empleado</button>
+                    </div>
+                }
                 <form class="input-group" asp-action="Index" method="GET">
                     <input type="hidden" name="Page" value="@Model.CurrentPage" />
                     <input type="hidden" name="RecordsPerPage" value="@Model.RecordsPerPage" />
@@ -44,13 +52,18 @@
                                     <td>@Html.DisplayFor(modelItem => item.Age)</td>
                                     <td>@Html.DisplayFor(modelItem => item.IsActive)</td>
                                     <td>
-                                        <div class="btn-group" role="group">
-                                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm"><i class="bi bi-pencil-fill"></i></a>
-                                            <button class="btn btn-danger btn-sm btnDelete" data-id="@item.Id"><i class="bi bi-trash-fill"></i></button>
-                                            <form asp-action="Delete" method="post" class="d-inline deleteForm" data-id="@item.Id">
+                                        @if (await _usersService.CurrentUserIsAuthorizedAsync("updateEmployee", "Employee"))
+                                        {
+                                            <a asp-action="Edit" class="btn btn-sm btn-warning" asp-route-id="@item.Id"><i class="bi bi-pencil-fill"></i>Editar</a>
+                                        }
+
+                                        @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteEmployee", "Employee"))
+                                        {
+                                            <form asp-action="Delete"  method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este empleado?');">
                                                 <input type="hidden" name="id" value="@item.Id" />
+                                                <button type="submit"><i class="bi bi-trash-fill"></i>Eliminar</button>
                                             </form>
-                                        </div>
+                                        }
                                     </td>
                                 </tr>
                             }

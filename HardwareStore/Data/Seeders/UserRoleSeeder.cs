@@ -66,7 +66,7 @@ namespace HardwareStore.Data.Seeders
             user = await _usersService.GetUserAsync("anad@yopmail.com");
 
 
-            Role creadorDeContenidoRole = await _context.Roles.Where(pbr => pbr.Name == "Vendedor")
+            Role Vendedor = await _context.Roles.Where(pbr => pbr.Name == "Vendedor")
                                                                                     .FirstAsync();
 
             if (user == null)
@@ -79,7 +79,7 @@ namespace HardwareStore.Data.Seeders
                     PhoneNumber = "30000000",
                     UserName = "anad@yopmail.com",
                     Document = "2222",
-                    Role = creadorDeContenidoRole
+                    Role = Vendedor
                 };
 
                 await _usersService.AddUserAsync(user, "1234");

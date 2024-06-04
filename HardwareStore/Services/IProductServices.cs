@@ -117,7 +117,7 @@ namespace HardwareStore.Services
                     _context.Products.Update(model);
                     await _context.SaveChangesAsync();
 
-                    return ResponseHelper<Products>.MakeResponseSuccess(model, "Producto editada con éxito");
+                    return ResponseHelper<Products>.MakeResponseSuccess(model, "Empleado editada con éxito");
                 }
                 catch (Exception ex)
                 {
@@ -128,7 +128,7 @@ namespace HardwareStore.Services
             {
                 try
                 {
-                    Products? products = await _context.Products.FirstOrDefaultAsync(p => p.Id == id);
+                    Products? products = await _context.Products.FirstOrDefaultAsync(e => e.Id == id);
 
                     if (products is null)
                     {

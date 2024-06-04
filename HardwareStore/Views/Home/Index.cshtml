@@ -3,7 +3,7 @@
 }
 
 <div class="container text-center mt-5">
-    <h1 class="display-4 mb-4">Bienvenido a HardwareStore</h1>
+    <h1 class="display-4 mb-3">Bienvenido a HardwareStore</h1>
     <p class="lead mb-5">Su tienda de hardware de confianza</p>
     <div class="row justify-content-center">
         <div class="col-lg-3 col-md-6 mb-4 px-3">
@@ -40,12 +40,44 @@
                     <p class="card-text flex-grow-1">Gestione los roles y permisos de los usuarios.</p>
                     <button class="btn btn-info mt-auto custom-btn" onclick="window.location.href='/Roles/Index'">Ir a Roles</button>
                 </div>
+                <div class="container text-center mt-5" style="overflow-y: auto;">
+                   
+                </div>
+
             </div>
         </div>
     </div>
 </div>
 
 <style>
+
+    .card {
+        border-radius: 15px;
+        transition: transform 0.2s;
+        margin-bottom: 1rem; /* Reduce el tamaño del borde inferior de las tarjetas */
+    }
+
+    /* Estilos del contenedor ajustados */
+    .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding-bottom: 20px;
+    }
+
+    /* Estilos de la fila ajustados */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 0 -10px;
+    }
+
+    /* Estilos de las columnas ajustados */
+    .col-lg-3,
+    .col-md-6 {
+        padding: 0 10px;
+    }
+
     body {
         background-color: #f0f2f5;
         font-family: 'Roboto', sans-serif;
@@ -131,6 +163,31 @@
     .card {
         width: 100%;
     }
+
+    <style >
+    .container {
+        max-width: 1000px; /* Reduce el ancho máximo del contenedor */
+        margin: 0 auto;
+        padding-bottom: 20px; /* Reducir el padding inferior */
+    }
+
+    .mb-4 {
+        margin-bottom: 1rem; /* Reducir el tamaño del borde inferior */
+    }
+
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin: 0 -10px; /* Reducir el margen horizontal */
+    }
+
+    .col-lg-3,
+    .col-md-6 {
+        padding: 0 10px; /* Reducir el padding horizontal */
+    }
+</style>
+
 </style>
 
 @section Scripts {
@@ -138,5 +195,3 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
-
-
