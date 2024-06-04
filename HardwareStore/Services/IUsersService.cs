@@ -1,55 +1,63 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using NuGet.Common;
+using HardwareStore.DTOs;
 using HardwareStore.Data;
 using HardwareStore.Data.Entities;
 using HardwareStore.Models;
-
+using HardwareStore.Core;
 using ClaimsUser = System.Security.Claims.ClaimsPrincipal;
+using HardwareStore.Core.Pagination;
+using HardwareStore.Helpers;
 
 
 namespace HardwareStore.Services
 {
     public interface IUsersService
     {
-        Task<IdentityResult> AddUserAsync(User user, string password);
+        Task<IdentityResult> AddUserAsync(User user, string password);//
 
-        Task<bool> CheckPasswordAsync(User user, string password);
+        Task<bool> CheckPasswordAsync(User user, string password);//
 
-        Task<IdentityResult> ConfirmEmailAsync(User user, string token);
+        Task<IdentityResult> ConfirmEmailAsync(User user, string token);//
 
-        Task<bool> CurrentUserIsAuthorizedAsync(string permission, string module);
+        Task<bool> CurrentUserIsAuthorizedAsync(string permission, string module);//
 
-        Task<string> GenerateEmailConfirmationTokenAsync(User user);
+        Task<string> GenerateEmailConfirmationTokenAsync(User user);//
 
-        Task<string> GeneratePasswordResetTokenAsync(User user);
+        Task<string> GeneratePasswordResetTokenAsync(User user);//
 
-        Task<User?> GetCurrentUserAsync();
+        Task<User?> GetCurrentUserAsync();//
 
-        Task<User> GetUserAsync(string email);
+        Task<User> GetUserAsync(string email);//
 
-        Task<SignInResult> LoginAsync(LoginViewModel model);
+        Task<SignInResult> LoginAsync(LoginViewModel model);//
 
-        Task LogoutAsync();
+        Task LogoutAsync();//
 
-        Task<IdentityResult> ResetPasswordAsync(User user, string resetToken, string newPassword);
+        Task<IdentityResult> ResetPasswordAsync(User user, string resetToken, string newPassword);//
 
-        Task<IdentityResult> UpdateUserAsync(User user);
+        Task<IdentityResult> UpdateUserAsync(User user);//
+
+        Task<PaginationResponse<User>> GetUsersPaginatedAsync(PaginationRequest request);
+        Task<Response<User>> CreateAsync(UserDTO dto);
+        Task<bool> CurrentUserIsSuperAdmin();
     }
 
     public class UsersService : IUsersService
     {
         private readonly DataContext _context;
+        private readonly IConverterHelper _converterHelper;
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
         private IHttpContextAccessor _httpContextAccessor;
 
-        public UsersService(UserManager<User> userManager, DataContext context, SignInManager<User> signInManager, IHttpContextAccessor httpContextAccessor)
+        public UsersService(UserManager<User> userManager, DataContext context, SignInManager<User> signInManager, IHttpContextAccessor httpContextAccessor, IConverterHelper converterHelper)
         {
             _userManager = userManager;
             _context = context;
             _signInManager = signInManager;
             _httpContextAccessor = httpContextAccessor;
+            _converterHelper = converterHelper;
         }
 
         public async  Task<IdentityResult> AddUserAsync(User user, string password)
@@ -152,6 +160,91 @@ namespace HardwareStore.Services
         public async Task<IdentityResult> UpdateUserAsync(User user)
         {
             return await _userManager.UpdateAsync(user);
+        }
+
+        public async Task<PaginationResponse<User>> GetUsersPaginatedAsync(PaginationRequest request)
+        {
+            IQueryable<User> queryable = _context.Users.AsQueryable()
+                                                       .Include(u => u.Role);
+
+            if (!string.IsNullOrWhiteSpace(request.Filter))
+            {
+                queryable = queryable.Where(q => q.FirstName.ToLower().Contains(request.Filter.ToLower())
+                                                || q.LastName.ToLower().Contains(request.Filter.ToLower())
+                                                || q.Document.ToLower().Contains(request.Filter.ToLower())
+                                                || q.Email.ToLower().Contains(request.Filter.ToLower())
+                                                || q.PhoneNumber.ToLower().Contains(request.Filter.ToLower()));
+            }
+
+            PagedList<User> list = await PagedList<User>.ToPagedListAsync(queryable, request);
+
+            PaginationResponse<User> result = new PaginationResponse<User>
+            {
+                List = list,
+                TotalCount = list.TotalCount,
+                RecordsPerPage = list.RecordsPerPage,
+                CurrentPage = list.CurrentPage,
+                TotalPages = list.TotalPages,
+                Filter = request.Filter
+            };
+
+            return result;
+        }
+
+        public async Task<bool> CurrentUserIsSuperAdmin()
+        {
+            ClaimsUser? claimUser = _httpContextAccessor.HttpContext?.User;
+
+            // Valida si esta logueado
+            if (claimUser is null)
+            {
+                return false;
+            }
+
+            string? userName = claimUser.Identity.Name;
+
+            User? user = await GetUserAsync(userName);
+
+            // Valida si user existe
+            if (user is null)
+            {
+                return false;
+            }
+
+            // Valida si es admin
+            if (user.Role.Name == Constants.SUPER_ADMIN_ROLE_NAME)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public async Task<Response<User>> CreateAsync(UserDTO dto)
+        {
+            try
+            {
+                User user = _converterHelper.ToUser(dto);
+                Guid id = Guid.NewGuid();
+                user.Id = id.ToString();
+
+                IdentityResult res = await AddUserAsync(user, dto.Document);
+
+                if (!res.Succeeded)
+                {
+                    return ResponseHelper<User>.MakeResponseFail("Error al crear el usuario.");
+                }
+
+                // TODO: Eliminar cuando se haga envío de Email
+                string token = await GenerateEmailConfirmationTokenAsync(user);
+                await ConfirmEmailAsync(user, token);
+
+                return ResponseHelper<User>.MakeResponseSuccess(user, "Usuario creado con éxito");
+            }
+            catch (Exception ex)
+            {
+                return ResponseHelper<User>.MakeResponseFail(ex);
+            }
         }
     }
 }

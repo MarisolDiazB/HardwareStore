@@ -12,6 +12,7 @@ namespace HardwareStore.Helpers
         public AccountUserDTO ToAccountDTO(User user);
 
         public Task<RoleDTO> ToRoleDTOAsync(Role role);
+        public User ToUser(UserDTO dto);
     }
     public class ConverterHelper : IConverterHelper
     {
@@ -61,6 +62,21 @@ namespace HardwareStore.Helpers
                 Id = role.Id,
                 Name = role.Name,
                 Permissions = permissions,
+            };
+        }
+
+        public User ToUser(UserDTO dto)
+        {
+            return new User
+            {
+                Id = dto.Id.ToString(),
+                Document = dto.Document,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Email = dto.Email,
+                UserName = dto.Email,
+                RoleId = dto.RoleId,
+                PhoneNumber = dto.PhoneNumber,
             };
         }
     }

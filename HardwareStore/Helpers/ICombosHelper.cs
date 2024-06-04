@@ -7,6 +7,7 @@ namespace HardwareStore.Helpers
         public interface ICombosHelper
         {
             Task<IEnumerable<SelectListItem>> GetComboSections();
+            Task<IEnumerable<SelectListItem>> GetComboRolesAsync();
             Task<IEnumerable<SelectListItem>> GetComboEmployees();
         }
 
@@ -40,8 +41,25 @@ namespace HardwareStore.Helpers
                 return sections;
             }
 
-            // Obtiene la lista de empleados para un combo.
-            public async Task<IEnumerable<SelectListItem>> GetComboEmployees()
+        public async Task<IEnumerable<SelectListItem>> GetComboRolesAsync()
+        {
+            List<SelectListItem> list = await _context.Roles.Select(r => new SelectListItem
+            {
+                Text = r.Name,
+                Value = r.Id.ToString(),
+            }).ToListAsync();
+
+            list.Insert(0, new SelectListItem
+            {
+                Text = "[Seleccione un rol...]",
+                Value = "0"
+            });
+
+            return list;
+        }
+
+        // Obtiene la lista de empleados para un combo.
+        public async Task<IEnumerable<SelectListItem>> GetComboEmployees()
             {
                 var employees = await _context.Employees
                     .Select(e => new SelectListItem
