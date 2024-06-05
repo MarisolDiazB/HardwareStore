@@ -1,37 +1,104 @@
 ﻿@model HardwareStore.Data.Entities.Employee
+
 @{
     ViewData["Title"] = "Editar Empleado";
 }
 
-<h2>Editar Empleado</h2>
-<form asp-action="Edit" method="post">
-    <div class="form-group">
-        <label asp-for="FirstName">Nombre</label>
-        <input asp-for="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="LastName">Apellido</label>
-        <input asp-for="LastName" class="form-control" />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Age">Edad</label>
-        <input asp-for="Age" class="form-control" />
-        <span asp-validation-for="Age" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="IsActive">Activo</label>
-        <input asp-for="IsActive" class="form-control" />
-        <span asp-validation-for="IsActive" class="text-danger"></span>
-    </div>
-    <input type="hidden" asp-for="Id" />
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/Employee/Index'">Volver</button>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
 
-</form>
+    .main-container {
+        display: flex;
+        justify-content: right;
+        align-items: right;
+        min-height: 100vh;
+        margin-top: -50px; /* Agrega esta línea */
+    }
 
+    .card {
+        width: 100%;
+        max-width: 1000px; /* Incrementado de 800px a 1000px */
+        margin: 20px;
+        padding: 20px; /* Añadido padding para dar más espacio dentro de la tarjeta */
+    }
 
+    .btn-custom {
+        background-color: #007bff;
+        color: white;
+        border-radius: 30px;
+        padding: 10px 20px; /* Ajustado el padding para hacer los botones más grandes */
+        font-size: 16px; /* Incrementado el tamaño de la fuente */
+    }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-outline-custom {
+        border-color: #007bff;
+        color: #007bff;
+        border-radius: 30px;
+        padding: 10px 20px; /* Ajustado el padding para hacer los botones más grandes */
+        font-size: 16px; /* Incrementado el tamaño de la fuente */
+    }
+
+        .btn-outline-custom:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+    .form-label {
+        font-size: 18px; /* Incrementado el tamaño de la fuente de las etiquetas */
+    }
+
+    .form-control {
+        font-size: 16px; /* Incrementado el tamaño de la fuente de los campos de entrada */
+        padding: 10px; /* Añadido padding para hacer los campos de entrada más grandes */
+    }
+</style>
+
+<div class="main-container">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <div class="mb-3">
+                    <label asp-for="FirstName" class="form-label">Nombre</label>
+                    <input asp-for="FirstName" class="form-control" />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label">Apellido</label>
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Age" class="form-label">Edad</label>
+                    <input asp-for="Age" class="form-control" />
+                    <span asp-validation-for="Age" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label">Activo</label>
+                </div>
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-custom">Guardar</button>
+                    <button type="button" class="btn btn-outline-custom" onclick="window.location.href='/Employee/Index'">Volver</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     @{

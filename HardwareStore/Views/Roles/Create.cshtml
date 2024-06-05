@@ -1,95 +1,129 @@
 ﻿@model HardwareStore.DTOs.RoleDTO
+
 @{
     ViewData["Title"] = "Nuevo Rol";
-    
 }
 
-<section class="section dashboard">
+<style>
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
 
-    @* Rol *@
+    .pagetitle {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+        .pagetitle h1 {
+            font-size: 2em;
+            color: #007bff;
+        }
+
+    .breadcrumb {
+        justify-content: center;
+        background-color: #f8f9fa;
+    }
+
+    .breadcrumb-item a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .breadcrumb-item.active a {
+        color: #6c757d;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-title {
+        color: #007bff;
+        font-size: 1.5em;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .btn-custom {
+        background-color: #007bff;
+        color: white;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 10px;
+    }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-secondary {
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 16px;
+        margin: 10px;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+</style>
+
+<div class="main-container">
+    <div class="pagetitle">
+        <h1>Nuevo Rol</h1>
+        </nav>
+    </div>
+
     <div class="card">
         <div class="card-body">
-            <h1 class="card-title">Nuevo Rol</h1>
-
-
+            <h3 class="card-title">Datos del Rol</h3>
             <form class="row g-3" asp-action="Create" method="POST" id="frmCreate">
-
                 <partial name="_Role" />
-
             </form>
-
         </div>
     </div>
 
-    @* Permisos *@
-    <partial name="_Permissions" />
-
-
-    <div class="text-center">
-        <button type="submit" class="btn btn-primary" form="frmCreate" id="btnSave">Guardar</button>
-        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Permisos</h3>
+            <partial name="_Permissions" />
+        </div>
     </div>
 
-</section>
+    <div class="text-center">
+        <button type="submit" class="btn btn-custom" form="frmCreate" id="btnSave">Guardar</button>
+        <a asp-action="Index" class="btn btn-secondary">Volver</a>
+    </div>
+</div>
 
-<style>
-
-    .card {
-        border-radius: 15px;
-        transition: transform 0.2s;
-        margin-bottom: 1rem; /* Reduce el tamaño del borde inferior de las tarjetas */
-    }
-
-    /* Estilos del contenedor ajustados */
-    .container {
-        max-width: 1000px;
-        margin: 0 auto;
-        padding-bottom: 20px;
-    }
-
-    /* Estilos de la fila ajustados */
-    .row {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        margin: 0 -10px;
-    }
-
-    /* Estilos de las columnas ajustados */
-    .col-lg-3,
-    .col-md-6 {
-        padding: 0 10px;
-    }
-    </style>
-    
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 
     <script>
-
         $(document).ready(function () {
-
             $("#btnSave").click(function (event) {
-
                 // Permisos
                 const permissions = $('.permission:checked');
-
                 let permissionIds = [];
 
                 permissions.each(function () {
-
                     const permissionId = $(this).data('permission-id');
                     permissionIds.push(permissionId);
                 });
 
                 $('#permissionIds').val(JSON.stringify(permissionIds));
-
-                
+            });
         });
-
-
-
     </script>
 }

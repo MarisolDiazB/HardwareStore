@@ -1,38 +1,102 @@
 ﻿@model HardwareStore.Data.Entities.Employee
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Nuevo Empleado";
 }
 
-<h1>Nuevo Empleado</h1>
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
 
-<form asp-action="Create" method="post">
-    <div class="mb-3">
-        <label asp-for="FirstName" class="form-label"></label>
-        <input asp-for="FirstName" class="form-control" placeholder="Nombre.." />
-        <span asp-validation-for="FirstName" class="text-danger"></span>
+    .main-container {
+        display: flex;
+        justify-content: right;
+        align-items: right;
+        min-height: 100vh;
+        margin-top: -50px; /* Agrega esta línea */
+    }
+
+    .card {
+        width: 100%;
+        max-width: 1000px; /* Incrementado de 800px a 1000px */
+        margin: 20px;
+        padding: 20px; /* Añadido padding para dar más espacio dentro de la tarjeta */
+    }
+
+    .btn-custom {
+        background-color: #007bff;
+        color: white;
+        border-radius: 30px;
+        padding: 10px 20px; /* Ajustado el padding para hacer los botones más grandes */
+        font-size: 16px; /* Incrementado el tamaño de la fuente */
+    }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-outline-custom {
+        border-color: #007bff;
+        color: #007bff;
+        border-radius: 30px;
+        padding: 10px 20px; /* Ajustado el padding para hacer los botones más grandes */
+        font-size: 16px; /* Incrementado el tamaño de la fuente */
+    }
+
+        .btn-outline-custom:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+    .form-label {
+        font-size: 18px; /* Incrementado el tamaño de la fuente de las etiquetas */
+    }
+
+    .form-control {
+        font-size: 16px; /* Incrementado el tamaño de la fuente de los campos de entrada */
+        padding: 10px; /* Añadido padding para hacer los campos de entrada más grandes */
+    }
+</style>
+
+<div class="main-container">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>@ViewData["Title"]</h3>
+        </div>
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div class="mb-3">
+                    <label asp-for="FirstName" class="form-label"></label>
+                    <input asp-for="FirstName" class="form-control" placeholder="Nombre..." />
+                    <span asp-validation-for="FirstName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="LastName" class="form-label"></label>
+                    <input asp-for="LastName" class="form-control" placeholder="Apellido..." />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Age" class="form-label"></label>
+                    <input asp-for="Age" class="form-control" placeholder="Edad..." />
+                    <span asp-validation-for="Age" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label"></label>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-custom">Guardar</button>
+                    <button type="button" class="btn btn-outline-custom" onclick="window.location.href='/Employee/Index'">Volver</button>
+                </div>
+            </form>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="LastName" class="form-label"></label>
-        <input asp-for="LastName" class="form-control" placeholder="Apellido.." />
-        <span asp-validation-for="LastName" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Age" class="form-label"></label>
-        <input asp-for="Age" class="form-control" placeholder="Edad.." />
-        <span asp-validation-for="Age" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3 form-check">
-        <input asp-for="IsActive" class="form-check-input" />
-        <label asp-for="IsActive" class="form-check-label"></label>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Guardar</button>
-    <button type="button" class="btn btn-outline-secondary" onclick="window.location.href='/Employee/Index'">Volver</button>
-</form>
+</div>
 
 @section Scripts {
     @{

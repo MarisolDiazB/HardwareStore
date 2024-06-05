@@ -1,41 +1,168 @@
-﻿@model PaginationResponse<HardwareStore.Data.Entities.Customer>
+﻿@using HardwareStore.Core
+@model PaginationResponse<HardwareStore.Data.Entities.Customer>
+
 @inject HardwareStore.Services.IUsersService _usersService
 
 @{
     ViewData["Title"] = "Clientes";
 }
 
-<div class="container mt-5">
+<style>
+    body {
+        background-color: #f8f9fa;
+    }
+
+    .main-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin-top: -50px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 1720px;
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .btn-custom {
+        background-color: #007bff;
+        color: white;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+        }
+
+    .btn-outline-custom {
+        border-color: #007bff;
+        color: #007bff;
+        border-radius: 30px;
+        padding: 10px 20px;
+        font-size: 16px;
+    }
+
+        .btn-outline-custom:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+    .table thead th {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    .table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+        .table th, .table td {
+            width: 20%; /* Ajusta según tus necesidades */
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            text-align: center;
+            vertical-align: middle;
+        }
+
+    .badge {
+        padding: 0.5em;
+        font-size: 0.9em;
+    }
+
+    .pagination {
+        justify-content: center;
+        padding-top: 20px;
+    }
+
+        .pagination li {
+            list-style: none;
+            display: inline;
+        }
+
+        .pagination .page-link {
+            border-radius: 30px;
+            padding: 10px 20px;
+            margin: 0 5px;
+            color: #007bff;
+            border: 1px solid #007bff;
+            text-decoration: none;
+        }
+
+            .pagination .page-link:hover {
+                background-color: #007bff;
+                color: white;
+            }
+
+        .pagination .active .page-link {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+
+    /* Estilo personalizado para los iconos de los botones */
+    .btn-icon {
+        background: none;
+        border: none;
+        color: #007bff;
+        font-size: 1.2em;
+        margin: 0 5px;
+    }
+
+        .btn-icon:hover {
+            color: #0056b3;
+        }
+
+    .btn-icon-delete {
+        color: red;
+    }
+
+        .btn-icon-delete:hover {
+            color: darkred;
+        }
+</style>
+
+<div class="main-container">
     <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>@ViewData["Title"]</h3>
+        </div>
         <div class="card-body">
-            <h2 class="text-center mb-4">@ViewData["Title"]</h2>
-            @if (await _usersService.CurrentUserIsAuthorizedAsync("createSections", "Secciones"))
+            @if (await _usersService.CurrentUserIsAuthorizedAsync("createCustomer", "Customer"))
             {
-                <div class="d-flex justify-content-end mb-3">
-                    <a asp-action="Create" class="btn btn-primary btn-lg"><i class="bi bi-plus-circle"></i> Nuevo Cliente</a>
+                <div class="text-end mb-4">
+                    <button class="btn btn-custom" onclick="window.location.href='/Customer/Create'">
+                        <i class="fas fa-plus-circle"></i> Nuevo Cliente
+                    </button>
                 </div>
             }
 
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <form class="input-group" asp-action="Index" method="GET">
-                        <input type="hidden" name="Page" value="@Model.CurrentPage" />
-                        <input type="hidden" name="RecordsPerPage" value="@Model.RecordsPerPage" />
-                        <input type="text" class="form-control" placeholder="Buscar..." asp-for="Filter" name="Filter">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" type="submit">
-                                <i class="bi bi-search"></i>
-                            </button>
-                        </div>
-                    </form>
+            <form class="d-flex mb-4" asp-action="Index" method="GET">
+                <input type="hidden" name="Page" value="@Model.CurrentPage" />
+                <input type="hidden" name="RecordsPerPage" value="@Model.RecordsPerPage" />
+                <div class="input-group w-100">
+                    <input type="text" class="form-control" placeholder="Buscar..." asp-for="Filter" name="Filter">
+                    <button class="btn btn-custom" type="submit">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
-            </div>
+            </form>
 
             @if (Model != null && Model.List != null && Model.List.Any())
             {
                 <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead class="thead-dark">
+                    <table class="table table-bordered text-center">
+                        <thead class="table-dark">
                             <tr>
                                 <th>Nombre</th>
                                 <th>Apellido</th>
@@ -53,87 +180,115 @@
                                     <td>@Html.DisplayFor(modelItem => item.Customeraddress)</td>
                                     <td>@Html.DisplayFor(modelItem => item.Phone)</td>
                                     <td>
+                                        <div class="btn-group">
                                             @if (await _usersService.CurrentUserIsAuthorizedAsync("updateCustomer", "Customer"))
                                             {
-                                            <a asp-action="Edit" class="btn btn-sm btn-warning" asp-route-id="@item.Id"><i class="bi bi-pencil-fill"></i>Editar</a>
+                                                <a asp-action="Edit" class="btn-icon" asp-route-id="@item.Id" title="Editar">
+                                                    <i class="fas fa-pencil-alt"></i>
+                                                </a>
                                             }
-
                                             @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteCustomer", "Customer"))
                                             {
-                                            <form asp-action="Delete" method="post" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
-                                                <input type="hidden" name="id" value="@item.Id" />
-                                                <button type="submit"><i class="bi bi-trash-fill"></i>Eliminar</button>
-                                            </form>
+                                                <button type="button" class="btn-icon btn-icon-delete btnDelete" data-id="@item.Id" title="Eliminar">
+                                                    <i class="fas fa-trash-alt"></i>
+                                                </button>
                                             }
+                                        </div>
                                     </td>
-                                    
                                 </tr>
                             }
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Paginación -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        @if (Model.CurrentPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { Page = Model.CurrentPage - 1, RecordsPerPage = Model.RecordsPerPage, Filter = Model.Filter })">
+                                    Anterior
+                                </a>
+                            </li>
+                        }
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                <a class="page-link" href="@Url.Action("Index", new { Page = i, RecordsPerPage = Model.RecordsPerPage, Filter = Model.Filter })">
+                                    @i
+                                </a>
+                            </li>
+                        }
+                        @if (Model.CurrentPage < Model.TotalPages)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" href="@Url.Action("Index", new { Page = Model.CurrentPage + 1, RecordsPerPage = Model.RecordsPerPage, Filter = Model.Filter })">
+                                    Siguiente
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
             }
             else
             {
-                <div class="alert alert-warning" role="alert">
+                <div class="alert alert-warning text-center" role="alert">
                     No se encontraron clientes.
                 </div>
             }
-
-            @* Paginación *@
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-                        <a class="page-link" href="/Customer/Index?page=1&RecordsPerPage=@Model.RecordsPerPage&Filter=@Model.Filter" aria-label="Primero">
-                            <span aria-hidden="true">&laquo;&laquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-                        <a class="page-link" href="/Customer/Index?page=@(Model.CurrentPage - 1)&RecordsPerPage=@Model.RecordsPerPage&Filter=@Model.Filter" aria-label="Anterior">
-                            <span aria-hidden="true">&laquo;</span>
-                        </a>
-                    </li>
-                    @foreach (var pageNumber in Model.Pages)
-                    {
-                        <li class="page-item @(Model.CurrentPage == pageNumber ? "active" : "")">
-                            <a class="page-link" href="/Customer/Index?page=@pageNumber&RecordsPerPage=@Model.RecordsPerPage&Filter=@Model.Filter">@pageNumber</a>
-                        </li>
-                    }
-                    <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
-                        <a class="page-link" href="/Customer/Index?page=@(Model.CurrentPage + 1)&RecordsPerPage=@Model.RecordsPerPage&Filter=@Model.Filter" aria-label="Siguiente">
-                            <span aria-hidden="true">&raquo;</span>
-                        </a>
-                    </li>
-                    <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
-                        <a class="page-link" href="/Customer/Index?page=@Model.TotalPages&RecordsPerPage=@Model.RecordsPerPage&Filter=@Model.Filter" aria-label="Último">
-                            <span aria-hidden="true">&raquo;&raquo;</span>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
         </div>
     </div>
 </div>
 
-<button class="btn btn-outline-secondary mt-3" type="button" onclick="window.location.href='/Home/Index'">Volver</button>
-
 @section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $(document).ready(function () {
-            $('.btnDelete').click(function () {
-                var id = $(this).data('id');
-                Swal.fire({
-                    title: '¿Estás seguro?',
-                    text: '¡No podrás revertir esto!',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#d33',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Sí, eliminarlo!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        $('.deleteForm[data-id="' + id + '"]').submit();
-                    }
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.btnDelete').forEach(function (button) {
+                button.addEventListener('click', function () {
+                    var id = this.getAttribute('data-id');
+                    Swal.fire({
+                        title: '¿Estás seguro?',
+                        text: '¡No podrás revertir esto!',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#d33',
+                        cancelButtonColor: '#007bff',
+                        confirmButtonText: 'Sí, eliminarlo!'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            fetch(`/Customer/Delete?id=${id}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('input[name="__RequestVerificationToken"]').value
+                                }
+                            }).then(response => {
+                                if (response.ok) {
+                                    Swal.fire(
+                                        'Eliminado!',
+                                        'El cliente ha sido eliminado.',
+                                        'success'
+                                    ).then(() => {
+                                        location.reload();
+                                    });
+                                } else {
+                                    Swal.fire(
+                                        'Error',
+                                        'Hubo un problema al eliminar el cliente.',
+                                        'error'
+                                    );
+                                }
+                            }).catch(error => {
+                                Swal.fire(
+                                    'Error',
+                                    'Hubo un problema al eliminar el cliente.',
+                                    'error'
+                                );
+                            });
+                        }
+                    });
                 });
             });
         });
