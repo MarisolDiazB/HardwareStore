@@ -174,6 +174,7 @@ namespace HardwareStore.Services
                                                 || q.Document.ToLower().Contains(request.Filter.ToLower())
                                                 || q.Email.ToLower().Contains(request.Filter.ToLower())
                                                 || q.PhoneNumber.ToLower().Contains(request.Filter.ToLower()));
+                                                
             }
 
             PagedList<User> list = await PagedList<User>.ToPagedListAsync(queryable, request);

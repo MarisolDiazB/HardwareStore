@@ -42,5 +42,7 @@ namespace HardwareStore.DTOs
 
         [Display(Name = "Usuario")]
         public string FullName => $"{FirstName} {LastName}";
+
     }
 }
+
