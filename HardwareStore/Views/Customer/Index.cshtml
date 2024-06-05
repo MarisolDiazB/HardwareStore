@@ -1,6 +1,5 @@
 ﻿@using HardwareStore.Core
 @model PaginationResponse<HardwareStore.Data.Entities.Customer>
-
 @inject HardwareStore.Services.IUsersService _usersService
 
 @{
@@ -190,8 +189,9 @@
                                             @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteCustomer", "Customer"))
                                             {
                                                 <form asp-action="Delete" method="post" class="deleteForm" data-id="@item.Id" onsubmit="return false;">
+                                                    @Html.AntiForgeryToken()
                                                     <input type="hidden" name="id" value="@item.Id" />
-                                                    <button type="button" class="btn-icon-delete btnDelete" title="Eliminar">
+                                                    <button type="button" class="btn-icon-delete btnDelete" data-id="@item.Id">
                                                         <i class="fas fa-trash-alt" style="color: red;"></i>
                                                     </button>
                                                 </form>
@@ -199,6 +199,7 @@
 
                                         </div>
                                     </td>
+
                                 </tr>
                             }
                         </tbody>
@@ -252,6 +253,7 @@
             document.querySelectorAll('.btnDelete').forEach(function (button) {
                 button.addEventListener('click', function () {
                     var id = this.getAttribute('data-id');
+                    var token = document.querySelector('input[name="__RequestVerificationToken"]').value;
                     Swal.fire({
                         title: '¿Estás seguro?',
                         text: '¡No podrás revertir esto!',
@@ -262,12 +264,13 @@
                         confirmButtonText: 'Sí, eliminarlo!'
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            fetch(`/Customer/Delete?id=${id}`, {
+                            fetch(`/Client/Delete`, {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
-                                    'X-CSRF-TOKEN': document.querySelector('input[name="__RequestVerificationToken"]').value
-                                }
+                                    'X-CSRF-TOKEN': token
+                                },
+                                body: JSON.stringify({ id: id })
                             }).then(response => {
                                 if (response.ok) {
                                     Swal.fire(
@@ -298,3 +301,5 @@
         });
     </script>
 }
+
+
