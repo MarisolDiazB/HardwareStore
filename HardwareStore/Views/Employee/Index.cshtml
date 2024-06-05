@@ -187,19 +187,21 @@
                                         <div class="btn-group">
                                             @if (await _usersService.CurrentUserIsAuthorizedAsync("updateEmployee", "Employee"))
                                             {
-                                                <a asp-action="Edit" class="btn btn-outline-custom btn-sm" asp-route-id="@item.Id">
-                                                    <i class="fas fa-pencil-alt"></i> Editar
+                                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn-icon">
+                                                    <i class="fas fa-pencil-alt"></i>
                                                 </a>
                                             }
                                             @if (await _usersService.CurrentUserIsAuthorizedAsync("deleteEmployee", "Employee"))
                                             {
-                                                <form asp-action="Delete" method="post">
+                                                <form asp-action="Delete" method="post" class="deleteForm" data-id="@item.Id" onsubmit="return false;">
                                                     <input type="hidden" name="id" value="@item.Id" />
-                                                    <button type="submit" class="btn btn-outline-danger btn-sm btnDelete">
-                                                        <i class="fas fa-trash-alt"></i> Eliminar
+                                                    <button type="button" class="btn-icon-delete btnDelete">
+                                                        <i class="fas fa-trash-alt" style="color: red;"></i>
                                                     </button>
                                                 </form>
                                             }
+
+
                                         </div>
                                     </td>
                                 </tr>
