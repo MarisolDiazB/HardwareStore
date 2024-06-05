@@ -51,7 +51,7 @@ namespace HardwareStore.Controllers
         }
 
         [HttpPost]
-        [CustomAuthorize(permission: "createUsers", module: "Usuarios")]
+
         public async Task<IActionResult> Create(UserDTO dto)
         {
             if (!ModelState.IsValid)
@@ -62,6 +62,8 @@ namespace HardwareStore.Controllers
             }
 
             Response<User> response = await _usersService.CreateAsync(dto);
+
+          
 
             if (response.IsSuccess)
             {

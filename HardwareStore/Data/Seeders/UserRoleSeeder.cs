@@ -62,7 +62,7 @@ namespace HardwareStore.Data.Seeders
                 await _usersService.ConfirmEmailAsync(user, token);
             }
 
-            // Creador de contenido
+            // Vendedor
             user = await _usersService.GetUserAsync("anad@yopmail.com");
 
 

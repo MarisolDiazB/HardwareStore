@@ -77,6 +77,7 @@ namespace HardwareStore.Helpers
                 UserName = dto.Email,
                 RoleId = dto.RoleId,
                 PhoneNumber = dto.PhoneNumber,
+               
             };
         }
     }

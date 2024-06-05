@@ -6,7 +6,7 @@ namespace HardwareStore.Helpers
     {
         public interface ICombosHelper
         {
-            Task<IEnumerable<SelectListItem>> GetComboSections();
+          
             Task<IEnumerable<SelectListItem>> GetComboRolesAsync();
             Task<IEnumerable<SelectListItem>> GetComboEmployees();
         }
@@ -18,27 +18,6 @@ namespace HardwareStore.Helpers
             public CombosHelper(DataContext context)
             {
                 _context = context;
-            }
-
-            // Obtiene la lista de secciones para un combo.
-            public async Task<IEnumerable<SelectListItem>> GetComboSections()
-            {
-                var sections = await _context.Customer
-                    .Select(s => new SelectListItem
-                    {
-                        Text = s.FirstName,
-                        Value = s.Id.ToString(),
-                    })
-                    .ToListAsync();
-
-                // Agrega un elemento predeterminado al principio de la lista.
-                sections.Insert(0, new SelectListItem
-                {
-                    Text = "[Seleccione un Cliente...]",
-                    Value = "0"
-                });
-
-                return sections;
             }
 
         public async Task<IEnumerable<SelectListItem>> GetComboRolesAsync()
